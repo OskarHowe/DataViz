@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Language: XML
+  $Author:$
+  $Date:$
+  $Revision$
+  $Copyright: [2010-2017] Cosmo Tech, All Rights Reserved $
+-->
+<csmSon:Simulation xmlns:csmSon="http://www.cosmotech.com/csm_simulation/8.8">
+  <csmSon:Documentation/>
+  <csmSon:ModelInstance type="Trashcity2" id="Model">
+    <csmSon:Loader type="csmXMLInstantiation">
+      <csmSon:Property name="File">FirstInstance</csmSon:Property>
+    </csmSon:Loader>
+  </csmSon:ModelInstance>
+  <csmSon:SimulatorInstance>
+    <csmSon:SchedulerInstance>
+      <csmSon:RepeatTaskBlock repetitions="52">
+        <csmSon:ModelTask>Model</csmSon:ModelTask>
+        <csmSon:SimpleTask>
+          <csmSon:ModelName>Model</csmSon:ModelName>
+          <csmSon:Entity>Lyon</csmSon:Entity>
+          <csmSon:MesoFunction>Overview</csmSon:MesoFunction>
+        </csmSon:SimpleTask>
+      </csmSon:RepeatTaskBlock>
+    </csmSon:SchedulerInstance>
+    <csmSon:ProbeInstances>
+      <csmSon:ProbeInstance name="LoadTrucks" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="4.5" active="1">
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Avenue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Truck</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Fullness</csmSon:AttributeName>
+        </csmSon:Entity>
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Rue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Truck</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Fullness</csmSon:AttributeName>
+        </csmSon:Entity>
+      </csmSon:ProbeInstance>
+      <csmSon:ProbeInstance name="TotalTrashStreet" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="9" active="1">
+        <csmSon:Entity>
+          <csmSon:Name>Lyon</csmSon:Name>
+          <csmSon:SubEntityTypeName>Street</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>TotalTrash</csmSon:AttributeName>
+        </csmSon:Entity>
+      </csmSon:ProbeInstance>
+      <csmSon:ProbeInstance name="TotalTrashStreet" tag="0.5" active="1"/>
+      <csmSon:ProbeInstance name="ActiveTrucks" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="3.5" active="1">
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Avenue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Truck</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Active</csmSon:AttributeName>
+        </csmSon:Entity>
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Rue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Truck</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Active</csmSon:AttributeName>
+        </csmSon:Entity>
+      </csmSon:ProbeInstance>
+      <csmSon:ProbeInstance name="TruckCost" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="7.5" active="1">
+        <csmSon:Entity>
+          <csmSon:Name>Lyon</csmSon:Name>
+          <csmSon:SubEntityTypeName>Street</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>TruckCostTotal</csmSon:AttributeName>
+        </csmSon:Entity>
+      </csmSon:ProbeInstance>
+      <csmSon:ProbeInstance name="Agression" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="1::6" active="1">
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Avenue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Agression</csmSon:AttributeName>
+        </csmSon:Entity>
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Rue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Agression</csmSon:AttributeName>
+        </csmSon:Entity>
+      </csmSon:ProbeInstance>
+      <csmSon:ProbeInstance name="TrashProduction" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="1::5" active="1">
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Avenue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Bin</csmSon:AttributeName>
+        </csmSon:Entity>
+        <csmSon:Entity>
+          <csmSon:Name>Lyon::Rue</csmSon:Name>
+          <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>Bin</csmSon:AttributeName>
+        </csmSon:Entity>
+      </csmSon:ProbeInstance>
+      <csmSon:ProbeInstance name="ManifStreet" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="10" active="1">
+        <csmSon:Entity>
+          <csmSon:Name>Lyon</csmSon:Name>
+          <csmSon:SubEntityTypeName>Street</csmSon:SubEntityTypeName>
+          <csmSon:AttributeName>HasManifestationStreet</csmSon:AttributeName>
+        </csmSon:Entity>
+      </csmSon:ProbeInstance>
+    </csmSon:ProbeInstances>
+    <csmSon:ConsumerInstances>
+      <csmSon:ConsumerInstance name="TRuckLoadViewer" type="QtGenericChartViewerGL">
+        <csmSon:Properties>
+          <csmSon:Property name="BuildRule">SingleAttribute</csmSon:Property>
+          <csmSon:Property name="Layout">SingleGraph</csmSon:Property>
+          <csmSon:Property name="PlottingDimension">2D</csmSon:Property>
+          <csmSon:Property name="PlottingType">Curve</csmSon:Property>
+          <csmSon:Property name="Reset">false</csmSon:Property>
+          <csmSon:Property name="SelectionMode">AllEntities</csmSon:Property>
+          <csmSon:Property name="SortingAxisValue">X</csmSon:Property>
+          <csmSon:Property name="SortingByAxis">false</csmSon:Property>
+          <csmSon:Property name="UseColorScheme">false</csmSon:Property>
+          <csmSon:Property name="XDataRepresents">SimulationStep</csmSon:Property>
+          <csmSon:Property name="XFormula">x</csmSon:Property>
+          <csmSon:Property name="YAttributeReferenceType">EveryAttributes</csmSon:Property>
+          <csmSon:Property name="YDataRepresents">SimulationData</csmSon:Property>
+          <csmSon:Property name="YFormula">y</csmSon:Property>
+        </csmSon:Properties>
+        <csmSon:ProbeReferences>
+          <csmSon:ProbeReference>LoadTrucks</csmSon:ProbeReference>
+        </csmSon:ProbeReferences>
+      </csmSon:ConsumerInstance>
+      <csmSon:ConsumerInstance name="TotalTrash" type="QtGenericChartViewerGL">
+        <csmSon:Properties>
+          <csmSon:Property name="BuildRule">SingleAttribute</csmSon:Property>
+          <csmSon:Property name="Layout">SingleGraph</csmSon:Property>
+          <csmSon:Property name="PlottingDimension">2D</csmSon:Property>
+          <csmSon:Property name="PlottingType">Curve</csmSon:Property>
+          <csmSon:Property name="Reset">false</csmSon:Property>
+          <csmSon:Property name="SelectionMode">AllEntities</csmSon:Property>
+          <csmSon:Property name="SortingAxisValue">X</csmSon:Property>
+          <csmSon:Property name="SortingByAxis">false</csmSon:Property>
+          <csmSon:Property name="UseColorScheme">false</csmSon:Property>
+          <csmSon:Property name="XDataRepresents">SimulationStep</csmSon:Property>
+          <csmSon:Property name="XFormula">x</csmSon:Property>
+          <csmSon:Property name="YAttributeReferenceType">EveryAttributes</csmSon:Property>
+          <csmSon:Property name="YDataRepresents">SimulationData</csmSon:Property>
+          <csmSon:Property name="YFormula">y</csmSon:Property>
+        </csmSon:Properties>
+        <csmSon:ProbeReferences>
+          <csmSon:ProbeReference>TotalTrashStreet</csmSon:ProbeReference>
+        </csmSon:ProbeReferences>
+      </csmSon:ConsumerInstance>
+      <csmSon:ConsumerInstance name="ActiveTrucksViewer" type="QtGenericChartViewerGL">
+        <csmSon:Properties>
+          <csmSon:Property name="BuildRule">SingleAttribute</csmSon:Property>
+          <csmSon:Property name="Layout">SingleGraph</csmSon:Property>
+          <csmSon:Property name="PlottingDimension">2D</csmSon:Property>
+          <csmSon:Property name="PlottingType">Curve</csmSon:Property>
+          <csmSon:Property name="Reset">false</csmSon:Property>
+          <csmSon:Property name="SelectionMode">AllEntities</csmSon:Property>
+          <csmSon:Property name="SortingAxisValue">X</csmSon:Property>
+          <csmSon:Property name="SortingByAxis">false</csmSon:Property>
+          <csmSon:Property name="UseColorScheme">false</csmSon:Property>
+          <csmSon:Property name="XDataRepresents">SimulationStep</csmSon:Property>
+          <csmSon:Property name="XFormula">x</csmSon:Property>
+          <csmSon:Property name="YAttributeReferenceType">EveryAttributes</csmSon:Property>
+          <csmSon:Property name="YDataRepresents">SimulationData</csmSon:Property>
+          <csmSon:Property name="YFormula">y</csmSon:Property>
+        </csmSon:Properties>
+        <csmSon:ProbeReferences>
+          <csmSon:ProbeReference>ActiveTrucks</csmSon:ProbeReference>
+        </csmSon:ProbeReferences>
+      </csmSon:ConsumerInstance>
+      <csmSon:ConsumerInstance name="TruckCostStreet" type="QtGenericChartViewerGL">
+        <csmSon:Properties>
+          <csmSon:Property name="BuildRule">SingleAttribute</csmSon:Property>
+          <csmSon:Property name="Layout">SingleGraph</csmSon:Property>
+          <csmSon:Property name="PlottingDimension">2D</csmSon:Property>
+          <csmSon:Property name="PlottingType">Curve</csmSon:Property>
+          <csmSon:Property name="Reset">false</csmSon:Property>
+          <csmSon:Property name="SelectionMode">AllEntities</csmSon:Property>
+          <csmSon:Property name="SortingAxisValue">X</csmSon:Property>
+          <csmSon:Property name="SortingByAxis">false</csmSon:Property>
+          <csmSon:Property name="UseColorScheme">false</csmSon:Property>
+          <csmSon:Property name="XDataRepresents">SimulationStep</csmSon:Property>
+          <csmSon:Property name="XFormula">x</csmSon:Property>
+          <csmSon:Property name="YAttributeReferenceType">EveryAttributes</csmSon:Property>
+          <csmSon:Property name="YDataRepresents">SimulationData</csmSon:Property>
+          <csmSon:Property name="YFormula">y</csmSon:Property>
+        </csmSon:Properties>
+        <csmSon:ProbeReferences>
+          <csmSon:ProbeReference>TruckCost</csmSon:ProbeReference>
+        </csmSon:ProbeReferences>
+      </csmSon:ConsumerInstance>
+      <csmSon:ConsumerInstance name="SatisViewer" type="QtGenericChartViewerGL">
+        <csmSon:Properties>
+          <csmSon:Property name="BuildRule">SingleAttribute</csmSon:Property>
+          <csmSon:Property name="Layout">SingleGraph</csmSon:Property>
+          <csmSon:Property name="PlottingDimension">2D</csmSon:Property>
+          <csmSon:Property name="PlottingType">Curve</csmSon:Property>
+          <csmSon:Property name="Reset">false</csmSon:Property>
+          <csmSon:Property name="SelectionMode">AllEntities</csmSon:Property>
+          <csmSon:Property name="SortingAxisValue">X</csmSon:Property>
+          <csmSon:Property name="SortingByAxis">false</csmSon:Property>
+          <csmSon:Property name="UseColorScheme">false</csmSon:Property>
+          <csmSon:Property name="XDataRepresents">SimulationStep</csmSon:Property>
+          <csmSon:Property name="XFormula">x</csmSon:Property>
+          <csmSon:Property name="YAttributeReferenceType">EveryAttributes</csmSon:Property>
+          <csmSon:Property name="YDataRepresents">SimulationData</csmSon:Property>
+          <csmSon:Property name="YFormula">y</csmSon:Property>
+        </csmSon:Properties>
+        <csmSon:ProbeReferences>
+          <csmSon:ProbeReference>Agression</csmSon:ProbeReference>
+        </csmSon:ProbeReferences>
+      </csmSon:ConsumerInstance>
+      <csmSon:ConsumerInstance name="BinIndiv" type="QtGenericChartViewerGL">
+        <csmSon:Properties>
+          <csmSon:Property name="BuildRule">SingleAttribute</csmSon:Property>
+          <csmSon:Property name="Layout">SingleGraph</csmSon:Property>
+          <csmSon:Property name="PlottingDimension">2D</csmSon:Property>
+          <csmSon:Property name="PlottingType">Curve</csmSon:Property>
+          <csmSon:Property name="Reset">false</csmSon:Property>
+          <csmSon:Property name="SelectionMode">AllEntities</csmSon:Property>
+          <csmSon:Property name="SortingAxisValue">X</csmSon:Property>
+          <csmSon:Property name="SortingByAxis">false</csmSon:Property>
+          <csmSon:Property name="UseColorScheme">false</csmSon:Property>
+          <csmSon:Property name="XDataRepresents">SimulationStep</csmSon:Property>
+          <csmSon:Property name="XFormula">x</csmSon:Property>
+          <csmSon:Property name="YAttributeReferenceType">EveryAttributes</csmSon:Property>
+          <csmSon:Property name="YDataRepresents">SimulationData</csmSon:Property>
+          <csmSon:Property name="YFormula">y</csmSon:Property>
+        </csmSon:Properties>
+        <csmSon:ProbeReferences>
+          <csmSon:ProbeReference>TrashProduction</csmSon:ProbeReference>
+        </csmSon:ProbeReferences>
+      </csmSon:ConsumerInstance>
+      <csmSon:ConsumerInstance name="ManifViewer" type="QtGenericChartViewerGL">
+        <csmSon:Properties>
+          <csmSon:Property name="BuildRule">SingleAttribute</csmSon:Property>
+          <csmSon:Property name="Layout">SingleGraph</csmSon:Property>
+          <csmSon:Property name="PlottingDimension">2D</csmSon:Property>
+          <csmSon:Property name="PlottingType">Curve</csmSon:Property>
+          <csmSon:Property name="Reset">false</csmSon:Property>
+          <csmSon:Property name="SelectionMode">AllEntities</csmSon:Property>
+          <csmSon:Property name="SortingAxisValue">X</csmSon:Property>
+          <csmSon:Property name="SortingByAxis">false</csmSon:Property>
+          <csmSon:Property name="UseColorScheme">false</csmSon:Property>
+          <csmSon:Property name="XDataRepresents">SimulationStep</csmSon:Property>
+          <csmSon:Property name="XFormula">x</csmSon:Property>
+          <csmSon:Property name="YAttributeReferenceType">EveryAttributes</csmSon:Property>
+          <csmSon:Property name="YDataRepresents">SimulationData</csmSon:Property>
+          <csmSon:Property name="YFormula">y</csmSon:Property>
+        </csmSon:Properties>
+        <csmSon:ProbeReferences>
+          <csmSon:ProbeReference>ManifStreet</csmSon:ProbeReference>
+        </csmSon:ProbeReferences>
+      </csmSon:ConsumerInstance>
+    </csmSon:ConsumerInstances>
+  </csmSon:SimulatorInstance>
+</csmSon:Simulation>

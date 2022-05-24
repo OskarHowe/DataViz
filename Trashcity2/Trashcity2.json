@@ -1,0 +1,211 @@
+[
+  {
+    "@context": "dtmi:dtdl:context;2",
+    "@id": "dtmi:model:Trashcity2;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Relationship",
+        "name": "contains",
+        "target": "dtmi:base:EntityInterface;1"
+      }
+    ],
+    "displayName": "Trashcity2"
+  },
+  {
+    "@context": "dtmi:dtdl:context;2",
+    "@id": "dtmi:base:CompoundEntity;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Relationship",
+        "name": "shared_environment",
+        "target": "dtmi:base:CompoundEntity;1"
+      }
+    ],
+    "displayName": "CompoundEntity",
+    "extends": [
+      "dtmi:base:EntityInterface;1"
+    ]
+  },
+  {
+    "@context": "dtmi:dtdl:context;2",
+    "@id": "dtmi:base:EntityInterface;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Property",
+        "name": "Id",
+        "schema": "long"
+      }
+    ],
+    "displayName": "EntityInterface"
+  },
+  {
+    "@context": "dtmi:dtdl:context;2",
+    "@id": "dtmi:entity:City;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Relationship",
+        "name": "City_contains_Street",
+        "properties": [
+          {
+            "@type": "Property",
+            "name": "owner",
+            "schema": "boolean"
+          },
+          {
+            "@type": "Property",
+            "name": "containerPath",
+            "schema": "string"
+          }
+        ],
+        "target": "dtmi:entity:Street;1"
+      }
+    ],
+    "displayName": "City",
+    "extends": [
+      "dtmi:base:CompoundEntity;1"
+    ]
+  },
+  {
+    "@context": "dtmi:dtdl:context;2",
+    "@id": "dtmi:entity:Inhabitant;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Property",
+        "name": "Trashproduction",
+        "schema": "integer"
+      },
+      {
+        "@type": "Property",
+        "name": "Mentality",
+        "schema": "integer"
+      },
+      {
+        "@type": "Relationship",
+        "name": "edge_Pickup",
+        "target": "dtmi:entity:Truck;1"
+      },
+      {
+        "@type": "Relationship",
+        "name": "edge_Talk",
+        "target": "dtmi:entity:Inhabitant;1"
+      }
+    ],
+    "displayName": "Inhabitant",
+    "extends": [
+      "dtmi:base:EntityInterface;1"
+    ]
+  },
+  {
+    "@context": "dtmi:dtdl:context;2",
+    "@id": "dtmi:entity:Street;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Property",
+        "name": "TresholdManifestation",
+        "schema": "float"
+      },
+      {
+        "@type": "Property",
+        "name": "TresholdTotalTrashPerInhab",
+        "schema": "integer"
+      },
+      {
+        "@type": "Property",
+        "name": "EfficiantUsage",
+        "schema": "float"
+      },
+      {
+        "@type": "Relationship",
+        "name": "Street_contains_Inhabitant",
+        "properties": [
+          {
+            "@type": "Property",
+            "name": "owner",
+            "schema": "boolean"
+          },
+          {
+            "@type": "Property",
+            "name": "containerPath",
+            "schema": "string"
+          }
+        ],
+        "target": "dtmi:entity:Inhabitant;1"
+      },
+      {
+        "@type": "Relationship",
+        "name": "Street_contains_Truck",
+        "properties": [
+          {
+            "@type": "Property",
+            "name": "owner",
+            "schema": "boolean"
+          },
+          {
+            "@type": "Property",
+            "name": "containerPath",
+            "schema": "string"
+          }
+        ],
+        "target": "dtmi:entity:Truck;1"
+      },
+      {
+        "@type": "Relationship",
+        "name": "Street_vertex",
+        "properties": [
+          {
+            "@type": "Property",
+            "name": "owner",
+            "schema": "boolean"
+          },
+          {
+            "@type": "Property",
+            "name": "containerPath",
+            "schema": "string"
+          }
+        ],
+        "target": "dtmi:base:EntityInterface;1"
+      }
+    ],
+    "displayName": "Street",
+    "extends": [
+      "dtmi:base:CompoundEntity;1"
+    ]
+  },
+  {
+    "@context": "dtmi:dtdl:context;2",
+    "@id": "dtmi:entity:Truck;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Property",
+        "name": "Volume",
+        "schema": "integer"
+      },
+      {
+        "@type": "Property",
+        "name": "BaseCost",
+        "schema": "float"
+      },
+      {
+        "@type": "Property",
+        "name": "MalfunctionPerYear",
+        "schema": "integer"
+      },
+      {
+        "@type": "Relationship",
+        "name": "edge_Pickup",
+        "target": "dtmi:entity:Inhabitant;1"
+      }
+    ],
+    "displayName": "Truck",
+    "extends": [
+      "dtmi:base:EntityInterface;1"
+    ]
+  }
+]
