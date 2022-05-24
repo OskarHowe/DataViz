@@ -82,7 +82,7 @@ else{
     <csm:State xsi:type="csm:CompositeType" name="InhabitantState">
       <csm:Container>
         <csm:Attribute name="Agression" modifier="Variable">
-          <csm:Documentation>value betaeen -1 and 1</csm:Documentation>
+          <csm:Documentation>value between -1 and 1</csm:Documentation>
           <csm:DataType xsi:type="csm:FloatType" name="Float" bits="32"/>
           <csm:DefaultValue>1</csm:DefaultValue>
         </csm:Attribute>

@@ -1,0 +1,2 @@
+Name,ParentName,TresholdManifestation,TresholdTotalTrashPerInhab,HasManifestationStreet,TruckCostTotal,EfficiantUsage,ActiveTrucks,TotalTrash,NbInhabitants,NbTrucks,ActiveTrucksNeeded
+Avenue,Lyon,0.05,12,false,0.0,0.7,0,0,0,0,0.0
