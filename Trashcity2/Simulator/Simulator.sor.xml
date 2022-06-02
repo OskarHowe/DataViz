@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Language: XML
-  $Author:$
-  $Date:$
+  $Author: oskar$
+  $Date: 02/06/2022$
   $Revision$
   $Copyright: [2010-2017] Cosmo Tech, All Rights Reserved $
 -->
@@ -19,7 +19,7 @@
   </csmSor:ConceptualModels>
   <csmSor:InlineInstrumentation>
     <csmSor:Probes>
-      <csmSor:Probe xsi:type="csmSor:StarProbe" name="Trucks">
+      <csmSor:Probe xsi:type="csmSor:StarProbe" name="TrucksStar">
         <csmSor:Observables>
           <csmSor:EntityReference name="TruckObs">{Model}Trashcity2::{Entity}Truck</csmSor:EntityReference>
         </csmSor:Observables>
@@ -35,8 +35,7 @@
         </csmSor:Dimension>
       </csmSor:Probe>
 
-      <csmSor:Probes>
-      <csmSor:Probe xsi:type="csmSor:StarProbe" name="Inhabitants">
+      <csmSor:Probe xsi:type="csmSor:StarProbe" name="InhabitantsStar">
         <csmSor:Observables>
           <csmSor:EntityReference name="InhabitantObs">{Model}Trashcity2::{Entity}Inhabitant</csmSor:EntityReference>
         </csmSor:Observables>
@@ -46,7 +45,7 @@
           <csmSor:CPPCode>GetAgression() = GetInhabitantObs()->GetAgression();</csmSor:CPPCode>
         </csmSor:Measure>
 
-        <csmSor:Measure xsi:type="csmSor:DataType" name="BinFullness" updateRate="OncePerObservablesValue" owned="1">
+        <csmSor:Measure xsi:type="csmSor:DataType" name="Bin" updateRate="OncePerObservablesValue" owned="1">
           <csmSor:DataTypeReference>{Model}Trashcity2::{DataType}Integer</csmSor:DataTypeReference>
           <csmSor:CPPCode>GetBin() = GetInhabitantObs()->GetBin();</csmSor:CPPCode>
         </csmSor:Measure>
@@ -57,7 +56,7 @@
         </csmSor:Dimension>
       </csmSor:Probe>
 
-      <csmSor:Probe xsi:type="csmSor:StarProbe" name="Street">
+      <csmSor:Probe xsi:type="csmSor:StarProbe" name="StreetStar">
         <csmSor:Observables>
           <csmSor:EntityReference name="StreetObs">{Model}Trashcity2::{Entity}Street</csmSor:EntityReference>
         </csmSor:Observables>
@@ -77,12 +76,12 @@
           <csmSor:CPPCode>GetActiveTrucksNeeded() = GetStreetObs()->GetActiveTrucksNeeded();</csmSor:CPPCode>
         </csmSor:Measure>
 
-        <csmSor:Measure xsi:type="csmSor:DataType" name="TruckCostStreet" updateRate="OncePerObservablesValue" owned="1">
+        <csmSor:Measure xsi:type="csmSor:DataType" name="TruckCostTotal" updateRate="OncePerObservablesValue" owned="1">
           <csmSor:DataTypeReference>{Model}Trashcity2::{DataType}FloatingPoint</csmSor:DataTypeReference>
           <csmSor:CPPCode>GetTruckCostTotal() = GetStreetObs()->GetTruckCostTotal();</csmSor:CPPCode>
         </csmSor:Measure>
 
-        <csmSor:Measure xsi:type="csmSor:DataType" name="ManifViewer" updateRate="OncePerObservablesValue" owned="1">
+        <csmSor:Measure xsi:type="csmSor:DataType" name="HasManifestationStreet" updateRate="OncePerObservablesValue" owned="1">
           <csmSor:DataTypeReference>{Model}Trashcity2::{DataType}Boolean</csmSor:DataTypeReference>
           <csmSor:CPPCode>GetHasManifestationStreet() = GetStreetObs()->GetHasManifestationStreet();</csmSor:CPPCode>
         </csmSor:Measure>
@@ -91,10 +90,11 @@
           <csmSor:DataTypeReference>{Model}Trashcity2::{DataType}String</csmSor:DataTypeReference>
           <csmSor:CPPCode>GetStreetName() = GetStreetObs()->GetName();</csmSor:CPPCode>
         </csmSor:Dimension>
-        
       </csmSor:Probe>
+
     </csmSor:Probes>
   </csmSor:InlineInstrumentation>
+
+
   <csmSor:Plugins/>
 </csmSor:Simulator>
-
