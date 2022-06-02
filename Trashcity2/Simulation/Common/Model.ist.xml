@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Language: XML
+  $Author: Oskar Howe $
+  $Date: 2022-05-24$
+  $Revision: $
+  $Copyright: [2010-2022] Cosmo Tech, All Rights Reserved $
+-->
+<csm:Model xmlns:doc="http://www.cosmotech.com/csm_doc/8.4"
+  xmlns:dbk="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+  xmlns:csm="http://www.cosmotech.com/csm/8.4">
+  <csm:Scheduler>
+    <csm:RepeatTaskBlock repetitions="7">
+      <csm:ForEachTask recursiveLevel="2" concurrencyLevel="1">
+        <SubEntityType>Inhabitant</SubEntityType>
+        <Process>ProduceTrash</Process>
+      </csm:ForEachTask>
+      <csm:ForEachTask recursiveLevel="2" concurrencyLevel="1">
+        <SubEntityType>Inhabitant</SubEntityType>
+        <Process>UpdateSatisfaction</Process>
+      </csm:ForEachTask>
+      <csm:ForEachTask recursiveLevel="1" concurrencyLevel="1">
+        <SubEntityType>Street</SubEntityType>
+        <Process>MesoPerRct</Process>
+      </csm:ForEachTask>
+    </csm:RepeatTaskBlock>
+    <csm:ForEachTask recursiveLevel="1" concurrencyLevel="1">
+      <SubEntityType>Street</SubEntityType>
+      <MesoFunction>OverviewStreet</MesoFunction>
+    </csm:ForEachTask>
+    <csm:ForEachTask recursiveLevel="1" concurrencyLevel="1">
+      <SubEntityType>Street</SubEntityType>
+      <Process>CalcTrucksNeededAndActivate</Process>
+    </csm:ForEachTask>
+    <csm:ForEachTask recursiveLevel="1" concurrencyLevel="1">
+      <SubEntityType>Street</SubEntityType>
+      <Process>MesoPickupTrash</Process>
+    </csm:ForEachTask>
+    <csm:ForEachTask recursiveLevel="2" concurrencyLevel="1">
+      <SubEntityType>Truck</SubEntityType>
+      <Process>EmptyLoad</Process>
+    </csm:ForEachTask>
+    <csm:ForEachTask recursiveLevel="2" concurrencyLevel="1">
+      <SubEntityType>Truck</SubEntityType>
+      <Process>CalcCost</Process>
+    </csm:ForEachTask>
+    <csm:ForEachTask recursiveLevel="1" concurrencyLevel="1">
+      <SubEntityType>Street</SubEntityType>
+      <Process>CalcTruckCostTotal</Process>
+    </csm:ForEachTask>
+    <csm:ForEachTask recursiveLevel="1" concurrencyLevel="1">
+      <SubEntityType>Street</SubEntityType>
+      <Process>CalManif</Process>
+    </csm:ForEachTask>
+  </csm:Scheduler>
+  <csm:City id="1" name="Lyon"/>
+</csm:Model>

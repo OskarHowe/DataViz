@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Language: XML
+  $Author:$
+  $Date:$
+  $Revision$
+  $Copyright: [2010-2021] Cosmo Tech, All Rights Reserved $
+-->
+<csmSon:Simulation xmlns:csmSon="http://www.cosmotech.com/csm_simulation/8.4">
+  <csmSon:Documentation/>
+  <csmSon:ModelInstance type="Trashcity2" id="Model">
+
+    <csmSon:Loader type="csmXMLInstantiation">
+      <csmSon:Property name="File">Common/Model</csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="csmXMLModelInstancePart">
+      <csmSon:Property name="File">Common/InstantiationImport</csmSon:Property>
+    </csmSon:Loader>
+
+  </csmSon:ModelInstance>
+  <csmSon:SimulatorInstance>
+
+    <csmSon:Loader type="csmXMLSchedulerInstance">
+      <csmSon:Property name="File">Common/SimulationScheduler</csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="csmXMLProbeInstances">
+     <csmSon:Property name="File">Common/Probes</csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="csmXMLConsumerInstances">
+     <csmSon:Property name="File">Common/ProbeConsumers</csmSon:Property>
+    </csmSon:Loader>
+
+  </csmSon:SimulatorInstance>
+</csmSon:Simulation>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Confidential - All rights reserved - Cosmo Tech - 2021
+This document and all information contained herein is the exclusive property
+- including all intellectual property rights pertaining thereto - of The
+Cosmo Tech. Any use, reproduction, translation, broadcasting,
+transmission, distribution, etc., to any person is prohibited unless it
+has been previously and specifically authorized by written means by The
+Cosmo Tech. Cosmo Tech will use any legal mean at its disposal
+to put an end to any illicit or prohibited act and obtain full
+compensation.
+-->
+<csmSon:ModelPart xmlns:csmSon="http://www.cosmotech.com/csm_modelpart/8.4" >
+
+    <csmSon:Loader type="cexCSVModelLoader">
+        <csmSon:Property name="File">Import/ModelParameters.csv</csmSon:Property>
+        <csmSon:Property name="Query">
+        Name,
+        TotalTrash,
+        TotalCost,
+        NbManifestation,
+        NbStreets,
+        </csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="cexCSVEntityLoader" name="StreetLoader">
+        <csmSon:Property name="File">Import/CE_Street.csv</csmSon:Property>
+        <csmSon:Property name="DefaultType">Street</csmSon:Property>
+        <csmSon:Property name="FieldSeparator">,</csmSon:Property>
+        <csmSon:Property name="Query">
+        Name as @Name,
+        ParentName as @ParentName,
+        TresholdManifestation,
+        TresholdTotalTrashPerInhab,
+        EfficiantUsage,
+        </csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="cexCSVEntityLoader" name="InhabitantLoader" scopeEntityId="1">
+        <csmSon:Property name="File">Import/BE_Inhabitant.csv</csmSon:Property>
+        <csmSon:Property name="DefaultType">Inhabitant</csmSon:Property>
+        <csmSon:Property name="FieldSeparator">,</csmSon:Property>
+        <csmSon:Property name="Query">
+        Name as @Name,
+        ParentName as @ParentName,
+        Agression,
+        Trashproduction,
+        Mentality,
+        </csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="cexCSVEntityLoader" name="TruckLoader" scopeEntityId="1">
+        <csmSon:Property name="File">Import/BE_Truck.csv</csmSon:Property>
+        <csmSon:Property name="DefaultType">Truck</csmSon:Property>
+        <csmSon:Property name="FieldSeparator">,</csmSon:Property>
+        <csmSon:Property name="Query">
+        Name as @Name,
+        ParentName as @ParentName,
+        Volume,
+        CostPerRoute,
+        BaseCost,
+        MalfunctionPerYear,
+        </csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="cexCSVGraphLoader" name="InhabitantVerticesLoader">
+        <csmSon:Property name="File">Import/BE_Inhabitant.csv</csmSon:Property>
+        <csmSon:Property name="FieldSeparator">,</csmSon:Property>
+        <csmSon:Property name="Query">
+        Name as @VertexName,
+        ParentName as @ParentName
+        </csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="cexCSVGraphLoader" name="TruckVerticesLoader">
+        <csmSon:Property name="File">Import/BE_Truck.csv</csmSon:Property>
+        <csmSon:Property name="FieldSeparator">,</csmSon:Property>
+        <csmSon:Property name="Query">
+        Name as @VertexName,
+        ParentName as @ParentName
+        </csmSon:Property>
+    </csmSon:Loader>
+
+
+    <csmSon:Loader type="cexCSVGraphLoader" name="ChatterLoader">
+        <csmSon:Property name="File">Import/Arcs_InhabitantToInhabitant.csv</csmSon:Property>
+        <csmSon:Property name="FieldSeparator">,</csmSon:Property>
+        <csmSon:Property name="UseVertexScope">true</csmSon:Property>
+        <csmSon:Property name="Query">
+        InhabitantNameS as @LeftName,
+        InhabitantNameD as @RightName
+        </csmSon:Property>
+    </csmSon:Loader>
+
+    <csmSon:Loader type="cexCSVGraphLoader" name="TruckToInhabitantLoader">
+        <csmSon:Property name="File">Import/Arcs_TruckToInhabitant.csv</csmSon:Property>
+        <csmSon:Property name="FieldSeparator">,</csmSon:Property>
+        <csmSon:Property name="UseVertexScope">true</csmSon:Property>
+        <csmSon:Property name="Query">
+        InhabitantName as @RightName,
+        TruckName as @LeftName
+        </csmSon:Property>
+    </csmSon:Loader>  
+
+</csmSon:ModelPart>
