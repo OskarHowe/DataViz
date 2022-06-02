@@ -7,7 +7,14 @@
   $Copyright: [2010-2021] Cosmo Tech, All Rights Reserved $
 -->
 <csmSon:ProbeInstances xmlns:csmSon="http://www.cosmotech.com/csm_probes/8.4">
-  <csmSon:ProbeInstance name="LoadTrucks" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="4.5" active="1">
+  <csmSon:ProbeInstance 
+            name="LoadTrucks" 
+            type="GenericAttributesSender" 
+            location="Model" 
+            entity="Lyon" 
+            loader="GenericAttributes" 
+            tag="4.5" 
+            active="1">
     <csmSon:Entity>
       <csmSon:Name>Lyon::Avenue</csmSon:Name>
       <csmSon:SubEntityTypeName>Truck</csmSon:SubEntityTypeName>
@@ -35,14 +42,14 @@
       <csmSon:AttributeName>TruckCostTotal</csmSon:AttributeName>
     </csmSon:Entity>
   </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="Agression" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes">
+  <csmSon:ProbeInstance name="Agression" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes"  tag="1::-1" active="1">
     <csmSon:Entity>
       <csmSon:Name>Lyon::Avenue</csmSon:Name>
       <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
       <csmSon:AttributeName>Agression</csmSon:AttributeName>
     </csmSon:Entity>
   </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="TrashProduction" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes">
+  <csmSon:ProbeInstance name="TrashProduction" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes"  tag="1::-1" active="1">
     <csmSon:Entity>
       <csmSon:Name>Lyon::Avenue</csmSon:Name>
       <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
@@ -56,4 +63,5 @@
       <csmSon:AttributeName>HasManifestationStreet</csmSon:AttributeName>
     </csmSon:Entity>
   </csmSon:ProbeInstance>
+
 </csmSon:ProbeInstances>

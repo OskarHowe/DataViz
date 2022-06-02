@@ -131,7 +131,7 @@
           <csmSon:Property name="YFormula">y</csmSon:Property>
         </csmSon:Properties>
         <csmSon:ProbeReferences>
-          <csmSon:ProbeReference>TrashProduction</csmSon:ProbeReference>
+          <csmSon:ProbeReference>BinFullness</csmSon:ProbeReference>
         </csmSon:ProbeReferences>
       </csmSon:ConsumerInstance>
       <csmSon:ConsumerInstance name="ManifViewer" type="QtGenericChartViewerGL">
@@ -152,7 +152,7 @@
           <csmSon:Property name="YFormula">y</csmSon:Property>
         </csmSon:Properties>
         <csmSon:ProbeReferences>
-          <csmSon:ProbeReference>ManifStreet</csmSon:ProbeReference>
+          <csmSon:ProbeReference>ManifViewer</csmSon:ProbeReference>
         </csmSon:ProbeReferences>
       </csmSon:ConsumerInstance>
     </csmSon:ConsumerInstances>
