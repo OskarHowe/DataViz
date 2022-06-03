@@ -107,7 +107,7 @@
           <csmSor:CPPCode>GetStreetName() = GetStreetObs()->GetName();</csmSor:CPPCode>
         </csmSor:Dimension>
       </csmSor:Probe>
-
+      <!-- 
       <csmSor:Probe xsi:type="csmSor:StarProbe" name="ParametersStar">
         <csmSor:Observables>
           <csmSor:EntityReference name="StreetObs">{Model}Trashcity2::{Entity}Street</csmSor:EntityReference>
@@ -149,7 +149,7 @@
           <csmSor:DataTypeReference>{Model}Trashcity2::{DataType}String</csmSor:DataTypeReference>
           <csmSor:CPPCode>GetParametersName() = GetStreetObs()->GetName();</csmSor:CPPCode>
         </csmSor:Dimension>
-      </csmSor:Probe>
+      </csmSor:Probe> -->
 
     </csmSor:Probes>
   </csmSor:InlineInstrumentation>

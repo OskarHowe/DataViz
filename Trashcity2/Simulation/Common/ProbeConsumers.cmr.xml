@@ -63,7 +63,7 @@
     </csmSon:ProbeReferences>
   </csmSon:ConsumerInstance>
 
-  <csmSon:ConsumerInstance name="CSVParameters" type="CSVFileGenericConsumer">
+  <!-- <csmSon:ConsumerInstance name="CSVParameters" type="CSVFileGenericConsumer">
     <csmSon:Properties>
       <csmSon:Property name="ColumnType">attribute</csmSon:Property>
       <csmSon:Property name="DesignateEntityByName">1</csmSon:Property>
@@ -79,6 +79,6 @@
     <csmSon:ProbeReferences>
       <csmSon:ProbeReference>ParametersStar</csmSon:ProbeReference>
     </csmSon:ProbeReferences>
-  </csmSon:ConsumerInstance>
+  </csmSon:ConsumerInstance> -->
 
 </csmSon:ConsumerInstances>

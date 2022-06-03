@@ -26,11 +26,11 @@
     </csmSon:Loader>
 
     <csmSon:Loader type="csmXMLProbeInstances">
-     <csmSon:Property name="File">Common/Probes</csmSon:Property>
+      <csmSon:Property name="File">Common/Probes</csmSon:Property>
     </csmSon:Loader>
 
     <csmSon:Loader type="csmXMLConsumerInstances">
-     <csmSon:Property name="File">Common/ProbeConsumers</csmSon:Property>
+      <csmSon:Property name="File">Common/ProbeConsumers</csmSon:Property>
     </csmSon:Loader>
 
   </csmSon:SimulatorInstance>
