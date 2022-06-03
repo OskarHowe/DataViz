@@ -7,61 +7,22 @@
   $Copyright: [2010-2021] Cosmo Tech, All Rights Reserved $
 -->
 <csmSon:ProbeInstances xmlns:csmSon="http://www.cosmotech.com/csm_probes/8.4">
-  <csmSon:ProbeInstance 
-            name="LoadTrucks" 
-            type="GenericAttributesSender" 
-            location="Model" 
-            entity="Lyon" 
-            loader="GenericAttributes" 
-            tag="4.5" 
-            active="1">
-    <csmSon:Entity>
-      <csmSon:Name>Lyon::Avenue</csmSon:Name>
-      <csmSon:SubEntityTypeName>Truck</csmSon:SubEntityTypeName>
-      <csmSon:AttributeName>Fullness</csmSon:AttributeName>
-    </csmSon:Entity>
-  </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="TotalTrashStreet" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="9" active="1">
-    <csmSon:Entity>
-      <csmSon:Name>Lyon</csmSon:Name>
-      <csmSon:SubEntityTypeName>Street</csmSon:SubEntityTypeName>
-      <csmSon:AttributeName>TotalTrash</csmSon:AttributeName>
-    </csmSon:Entity>
-  </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="ActiveTrucks" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="3.5" active="1">
-    <csmSon:Entity>
-      <csmSon:Name>Lyon::Avenue</csmSon:Name>
-      <csmSon:SubEntityTypeName>Truck</csmSon:SubEntityTypeName>
-      <csmSon:AttributeName>Active</csmSon:AttributeName>
-    </csmSon:Entity>
-  </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="TruckCost" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="7.5" active="1">
-    <csmSon:Entity>
-      <csmSon:Name>Lyon</csmSon:Name>
-      <csmSon:SubEntityTypeName>Street</csmSon:SubEntityTypeName>
-      <csmSon:AttributeName>TruckCostTotal</csmSon:AttributeName>
-    </csmSon:Entity>
-  </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="Agression" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes"  tag="1::-1" active="1">
-    <csmSon:Entity>
-      <csmSon:Name>Lyon::Avenue</csmSon:Name>
-      <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
-      <csmSon:AttributeName>Agression</csmSon:AttributeName>
-    </csmSon:Entity>
-  </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="TrashProduction" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes"  tag="1::-1" active="1">
-    <csmSon:Entity>
-      <csmSon:Name>Lyon::Avenue</csmSon:Name>
-      <csmSon:SubEntityTypeName>Inhabitant</csmSon:SubEntityTypeName>
-      <csmSon:AttributeName>Bin</csmSon:AttributeName>
-    </csmSon:Entity>
-  </csmSon:ProbeInstance>
-  <csmSon:ProbeInstance name="ManifStreet" type="GenericAttributesSender" location="Model" entity="Lyon" loader="GenericAttributes" tag="10" active="1">
-    <csmSon:Entity>
-      <csmSon:Name>Lyon</csmSon:Name>
-      <csmSon:SubEntityTypeName>Street</csmSon:SubEntityTypeName>
-      <csmSon:AttributeName>HasManifestationStreet</csmSon:AttributeName>
-    </csmSon:Entity>
+
+  <csmSon:ProbeInstance name="TrucksStar" type="TrucksStar" location="Simulation" tag="1::2::3.5" loader="TrucksStar" active="1">
+    <csmSon:TruckObs>
+      <csmSon:Reference recursiveLevel="2" path="{Model}Model::{Entity}Lyon"/>
+    </csmSon:TruckObs>
   </csmSon:ProbeInstance>
 
+  <csmSon:ProbeInstance name="InhabitantsStar" type="InhabitantsStar" location="Simulation" tag="1::1::1::-1" loader="InhabitantsStar" active="1">
+    <csmSon:InhabitantObs>
+      <csmSon:Reference recursiveLevel="2" path="{Model}Model::{Entity}Lyon"/>
+    </csmSon:InhabitantObs>
+  </csmSon:ProbeInstance>
+
+  <csmSon:ProbeInstance name="StreetStar" type="StreetStar" location="Simulation" tag="1::2::-1" loader="StreetStar" active="1">
+    <csmSon:StreetObs>
+      <csmSon:Reference recursiveLevel="2" path="{Model}Model::{Entity}Lyon"/>
+    </csmSon:StreetObs>
+  </csmSon:ProbeInstance>
 </csmSon:ProbeInstances>
