@@ -8,7 +8,7 @@
 -->
 <csmSon:ProbeInstances xmlns:csmSon="http://www.cosmotech.com/csm_probes/8.4">
 
-  <csmSon:ProbeInstance name="TrucksStar" type="TrucksStar" location="Simulation" tag="1::2::3.5" loader="TrucksStar" active="1">
+  <csmSon:ProbeInstance name="TrucksStar" type="TrucksStar" location="Simulation" tag="1::2::4.5" loader="TrucksStar" active="1">
     <csmSon:TruckObs>
       <csmSon:Reference recursiveLevel="2" path="{Model}Model::{Entity}Lyon"/>
     </csmSon:TruckObs>
@@ -22,7 +22,19 @@
 
   <csmSon:ProbeInstance name="StreetStar" type="StreetStar" location="Simulation" tag="1::2::-1" loader="StreetStar" active="1">
     <csmSon:StreetObs>
-      <csmSon:Reference recursiveLevel="2" path="{Model}Model::{Entity}Lyon"/>
+      <csmSon:Reference recursiveLevel="1" path="{Model}Model::{Entity}Lyon"/>
     </csmSon:StreetObs>
+  </csmSon:ProbeInstance>
+
+  <csmSon:ProbeInstance name="ParametersStar" type="ParametersStar" location="Simulation" tag="1::-1" loader="ParametersStar" active="1">
+    <csmSon:StreetObs>
+      <csmSon:Reference recursiveLevel="1" path="{Model}Model::{Entity}Lyon"/>
+    </csmSon:StreetObs>
+    <csmSon:InhabitantObs>
+      <csmSon:Reference recursiveLevel="2" path="{Model}Model::{Entity}Lyon"/>
+    </csmSon:InhabitantObs>
+    <csmSon:TruckObs>
+      <csmSon:Reference recursiveLevel="2" path="{Model}Model::{Entity}Lyon"/>
+    </csmSon:TruckObs>
   </csmSon:ProbeInstance>
 </csmSon:ProbeInstances>

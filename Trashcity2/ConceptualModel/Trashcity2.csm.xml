@@ -6,7 +6,10 @@
   $Revision$
   $Copyright: [2010-2017] Cosmo Tech, All Rights Reserved $
 -->
-<csm:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:doc="http://www.cosmotech.com/csm_doc/8.8" xmlns:dbk="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" xmlns:csm="http://www.cosmotech.com/csm/8.8">
+<csm:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:doc="http://www.cosmotech.com/csm_doc/8.8"
+  xmlns:dbk="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+  xmlns:csm="http://www.cosmotech.com/csm/8.8">
   <csm:ModelName>Trashcity2</csm:ModelName>
   <csm:DataType xsi:type="csm:BoolType" name="Boolean"/>
   <csm:DataType xsi:type="csm:IntType" name="Integer" bits="32" signed="1"/>
@@ -123,6 +126,7 @@ if(GetActive()){
     int ran = rand()%52 + 1;
 
     if(ran > GetMalfunctionPerYear()){
+      SetHadMalfunction(false);
       int NbInhabitants = 0;
       csmForEachTypedNeighbor(BE_Inhabitant, neighbor){
           NbInhabitants++;
@@ -153,8 +157,11 @@ if(GetActive()){
         }
       }
     }
+    else{
+        SetHadMalfunction(true);
+    }
   }
-]]></csm:CPPCode>
+]]>      </csm:CPPCode>
       <csm:EnvironmentReference>Quartier</csm:EnvironmentReference>
     </csm:Rule>
     <csm:Process name="CalcCost">
@@ -164,15 +171,13 @@ float cost = pow(volume/200 -11.35, 4) + 1.5*GetBaseCost();
 
 if(GetActive()){
     SetCostPerRoute(cost);
-  //SetCostPerRoute(50);
 }
 else{
     SetCostPerRoute(GetBaseCost() + log(volume));
-    //SetCostPerRoute(0);
 }
 //https://www.desmos.com/calculator?lang=fr
 //\left(\frac{x}{200}-d\right)^{3}+1.5p
-]]></csm:CPPCode>
+]]>      </csm:CPPCode>
     </csm:Process>
     <csm:Process name="EmptyLoad">
       <csm:CPPCode><![CDATA[if(GetActive()){
@@ -212,6 +217,10 @@ SetFullness(0);]]></csm:CPPCode>
         <csm:Attribute name="LastFullness" modifier="Variable">
           <csm:DataType xsi:type="csm:IntType" name="Int_11" bits="32" signed="1"/>
           <csm:DefaultValue>0</csm:DefaultValue>
+        </csm:Attribute>
+        <csm:Attribute name="HadMalfunction" modifier="Variable">
+          <csm:DataType xsi:type="csm:BoolType" name="Bool_1"/>
+          <csm:DefaultValue>false</csm:DefaultValue>
         </csm:Attribute>
       </csm:Container>
     </csm:State>
@@ -290,7 +299,7 @@ else if((totalTrash/inhabitants < GetTresholdTotalTrashPerInhab()) && (activeTru
         }
     }
 }
-]]></csm:CPPCode>
+]]>      </csm:CPPCode>
     </csm:Process>
     <csm:Process name="CalManif">
       <csm:CPPCode><![CDATA[
@@ -309,7 +318,7 @@ if((NbManifesting / std::max(1, int(NbManifesting))) >= GetTresholdManifestation
 else{
     SetHasManifestationStreet(false);
 }
-]]></csm:CPPCode>
+]]>      </csm:CPPCode>
     </csm:Process>
     <csm:Process name="CalcTruckCostTotal">
       <csm:CPPCode><![CDATA[float cost = GetTruckCostTotal();
@@ -321,6 +330,8 @@ SetTruckCostTotal(cost);]]></csm:CPPCode>
     </csm:Process>
     <csm:Process name="CalcTrucksNeededAndActivate">
       <csm:CPPCode><![CDATA[
+//MD_Trashcity2::BE_Truck::RuleContext<MD_Trashcity2::ENV_QuartierRuleView> truckRuleContext (GetContext(), GetEnvironmentRuleView());
+
 int activeTrucks = GetActiveTrucks();
 int totalTrash = GetTotalTrash();
 int volume = 0;
@@ -333,14 +344,14 @@ csmForEachTypedSubEntity(BE_Truck, truck){
         activeTrucks++;
     }
   }
-
 float trucksNeeded = float((lastFullness+totalTrash))/float(volume);
 //here it is important how to round.
-if(fmod(trucksNeeded, 1.0) > GetEfficiantUsage()){
-     trucksNeeded++;
+float decimal = trucksNeeded - floor(trucksNeeded);
+SetActiveTrucksNeeded(trucksNeeded);
+if(decimal > GetEfficiantUsage()){
+     trucksNeeded = trucksNeeded + 1.0;
 }
 activeTrucks = std::min(int(trucksNeeded), int(GetNbTrucks()));
-
 SetActiveTrucks(activeTrucks);
 
 //reset trucks
@@ -351,10 +362,11 @@ csmForEachTypedSubEntity(BE_Truck, truck){
 csmForEachTypedSubEntity(BE_Truck, truck){
     if(activeTrucks > 0){
         truck->SetActive(true);
+        truck->SetHadMalfunction(false);
         activeTrucks--;
     }
 }
-]]></csm:CPPCode>
+]]>      </csm:CPPCode>
     </csm:Process>
     <csm:Process name="MesoPickupTrash">
       <csm:CPPCode><![CDATA[
@@ -370,7 +382,7 @@ csmForEachTypedSubEntity(BE_Inhabitant, inhab){
 csmForEachTypedSubEntity(BE_Inhabitant, inhab){
     inhab->React(ruleContext);
 }
-]]></csm:CPPCode>
+]]>      </csm:CPPCode>
     </csm:Process>
     <csm:Process name="MesoPerRct">
       <csm:CPPCode><![CDATA[RuleContext<EnvironmentType::RuleViewType>  ruleContext( GetModel<ProcessContext::ModelRuleViewType::ModelType>(), GetEnvironmentRuleView());

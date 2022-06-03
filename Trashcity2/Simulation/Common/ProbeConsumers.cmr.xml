@@ -9,9 +9,7 @@
 
 <csmSon:ConsumerInstances xmlns:csmSon="http://www.cosmotech.com/csm_consumers/8.4">
 
-  <csmSon:ConsumerInstance
-          name="CSVTrucksConsumer"
-          type="CSVFileGenericConsumer">
+  <csmSon:ConsumerInstance name="CSVTrucksConsumer" type="CSVFileGenericConsumer">
     <csmSon:Properties>
       <csmSon:Property name="ColumnType">attribute</csmSon:Property>
       <csmSon:Property name="DesignateEntityByName">1</csmSon:Property>
@@ -29,9 +27,7 @@
     </csmSon:ProbeReferences>
   </csmSon:ConsumerInstance>
 
-  <csmSon:ConsumerInstance
-          name="CSVInhabitantsConsumer"
-          type="CSVFileGenericConsumer">
+  <csmSon:ConsumerInstance name="CSVInhabitantsConsumer" type="CSVFileGenericConsumer">
     <csmSon:Properties>
       <csmSon:Property name="ColumnType">attribute</csmSon:Property>
       <csmSon:Property name="DesignateEntityByName">1</csmSon:Property>
@@ -49,9 +45,7 @@
     </csmSon:ProbeReferences>
   </csmSon:ConsumerInstance>
 
-  <csmSon:ConsumerInstance
-          name="CSVStreet"
-          type="CSVFileGenericConsumer">
+  <csmSon:ConsumerInstance name="CSVStreet" type="CSVFileGenericConsumer">
     <csmSon:Properties>
       <csmSon:Property name="ColumnType">attribute</csmSon:Property>
       <csmSon:Property name="DesignateEntityByName">1</csmSon:Property>
@@ -66,6 +60,24 @@
     </csmSon:Properties>
     <csmSon:ProbeReferences>
       <csmSon:ProbeReference>StreetStar</csmSon:ProbeReference>
+    </csmSon:ProbeReferences>
+  </csmSon:ConsumerInstance>
+
+  <csmSon:ConsumerInstance name="CSVParameters" type="CSVFileGenericConsumer">
+    <csmSon:Properties>
+      <csmSon:Property name="ColumnType">attribute</csmSon:Property>
+      <csmSon:Property name="DesignateEntityByName">1</csmSon:Property>
+      <csmSon:Property name="DeterministicOutput">0</csmSon:Property>
+      <csmSon:Property name="FileName">Street</csmSon:Property>
+      <csmSon:Property name="FileType">entity</csmSon:Property>
+      <csmSon:Property name="HideLinkedValues">0</csmSon:Property>
+      <csmSon:Property name="LinkedValueSeparator">_</csmSon:Property>
+      <csmSon:Property name="RowType">iteration</csmSon:Property>
+      <csmSon:Property name="Separator">,</csmSon:Property>
+      <csmSon:Property name="SerializeAtEachIteration">0</csmSon:Property>
+    </csmSon:Properties>
+    <csmSon:ProbeReferences>
+      <csmSon:ProbeReference>ParametersStar</csmSon:ProbeReference>
     </csmSon:ProbeReferences>
   </csmSon:ConsumerInstance>
 
