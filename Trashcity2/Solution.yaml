@@ -1,5 +1,5 @@
-key: "Smart Trashmanagement Sulution"
-name: "Smart Trashmanagement Sulution"
+key: "Smart Trashmanagement Solution"
+name: "Smart Trashmanagement Solution"
 description: "A city in which inhabitants and trucks get simulateded. The truks pock up the trash which the inhabitants produce. In the worst case it can come to an manifestation, if the trash has not been picked up for a long period."
 repository: "trashcity2_simulator"
 version: "0.0.2"
@@ -32,7 +32,7 @@ parameterGroups:
       - "efficiantUsage"
       - "trashproduction"
 runTemplates:
-  - id: "1"
+  - id: "solution"
     name: "First Trashcity2 runtemplate"
     description: "First Trashcity2 runtemplate"
     csmSimulation: "BreweryDemoSimulationWithConnector"
@@ -48,4 +48,4 @@ runTemplates:
       - "1"
       - "With params"
     parameterGroups:
-      - "bar_parameters"
+      - "city_params"
