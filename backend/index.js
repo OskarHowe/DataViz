@@ -8,6 +8,7 @@ let redis;
 //route index.html
 server.get("/", async function (req, res) {
   if (!redis) {
+    //the client is not yet initialized
     redis = createClient({
       url: "redis://127.0.0.1:6379",
     });
@@ -18,7 +19,7 @@ server.get("/", async function (req, res) {
     res.send("Already connected to Redis-Stack");
   }
 });
-//route products
+//route graphs: returns a list of strings which are the keys of the graph entities
 server.get("/graphs", async function (req, res) {
   if (!redis) {
     res.send("Can't get graphs if not connected to Redis-Stack");
