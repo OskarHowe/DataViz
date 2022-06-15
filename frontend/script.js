@@ -1,3 +1,5 @@
+const textfield = document.getElementById("respose");
+textfield.innerHTML = "hello World";
 fetch("http://localhost:25566/") //because fetch returns a promise
   .then((response) => {
     if (!response.ok) {
@@ -6,7 +8,7 @@ fetch("http://localhost:25566/") //because fetch returns a promise
     return response.text();
   })
   .then((text) => {
-    alert(text);
+    textfield.innerHTML = text;
   })
   .catch((error) => {
     alert("Error in response: " + error);

@@ -14,8 +14,10 @@ server.get("/", async function (req, res) {
     });
     redis.on("error", (err) => console.log("Redis Client Error", err));
     await redis.connect();
+    res.header("Access-Control-Allow-Origin", "*");
     res.send("Conected to Redis-Stack");
   } else {
+    res.header("Access-Control-Allow-Origin", "*");
     res.send("Already connected to Redis-Stack");
   }
 });
