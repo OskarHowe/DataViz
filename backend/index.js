@@ -1,34 +1,70 @@
-const express = require("express");
+import express from "express";
 const server = express();
-const port = 25566;
+const port = process.env.PORT || 25566;
+import { createClient } from "redis";
 
-function isAuthorized(req, res, next) {
-  const auth = req.headers.authorization;
-  if (auth === "lollipop") {
-    next();
+let redis;
+//TODO: create client with custum hos, port defined in .env
+async function connect(host, port) {
+  redis = createClient({
+    url: "redis://127.0.0.1:6379",
+  });
+  redis.on("error", (err) => console.log("Redis Client Error", err));
+  await redis.connect();
+  let graphs = await redis.graph.list();
+  console.log(graphs);
+}
+async function getGraphs() {
+  if (!redis) {
+    return;
   } else {
-    res.status(401);
-    res.send("Permission denied!");
+    try {
+      let graphs = await redis;
+      console.log(graphs);
+      return graphs;
+    } catch (e) {
+      console.log("Failed to execute Graph.list" + e);
+    }
   }
 }
-
-const products = [
-  { id: 1, name: "hammer" },
-  { id: 2, name: "nails" },
-  { id: 3, name: "wrench" },
-];
-const users = [
-  { id: 1, name: "John Petterson" },
-  { id: 2, name: "Findus" },
-];
 //route index.html
-server.get("/", isAuthorized, (req, res) => res.send("Hello World!"));
-//route products
-server.get("/products", isAuthorized, (req, res) => res.json(products));
-
-server.get("/users", isAuthorized, (req, res) => {
-  res.json(users);
+server.get("/", async function (req, res) {
+  if (!redis) {
+    redis = await connect();
+    res.send("Conected to Redis-Stack");
+  } else {
+    res.send("Already connected to Redis-Stack");
+  }
 });
+//route products
+server.get("/graphs", async function (req, res) {
+  if (!redis) {
+    res.send("Can't get graphs if not connected to Redis-Stack");
+  } else {
+    try {
+      let graphs = getGraphs();
+      console.log(graphs);
+      res.json("graphs");
+    } catch (e) {
+      console.log(e);
+      res.send("An error occured");
+    }
+  }
+});
+server.get("/hello", async function (req, res) {
+  if (!redis) {
+    res.send("Can't get graphs if not connected to Redis-Stack");
+  } else {
+    try {
+      await redis.set("hello", "world");
+      res.json("graphs");
+    } catch (e) {
+      console.log(e);
+      res.send("An error occured");
+    }
+  }
+});
+
 //open and accept connections
 server.listen(port, () =>
   console.log(`Server is running and listening on port ${port}!`)
