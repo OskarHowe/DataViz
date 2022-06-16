@@ -24,7 +24,9 @@ server.get("/graphs", async function (req, res) {
     //server error
     res
       .status(505)
-      .send("No connection between Backend and Redis-Stack established");
+      .send(
+        "No connection between Server and Redis-Stack has been established before"
+      );
   } else {
     try {
       let graphs = await redis.graph.list();
@@ -43,8 +45,13 @@ redis = createClient({
 redis.on("error", (err) => console.log("Redis Client Error", err));
 await redis.connect();
 console.log("Connection to Redis-Stack established");
-
+//redis.shutdown();
+process.on("SIGINT", function (redis) {
+  console.log("\nShutting down server");
+  redis.shutdown;
+  process.exit();
+});
 //open and accept connections
 server.listen(port, () =>
-  console.log(`Server is running and listening on  http://localhost:${port}!`)
+  console.log(`Server is running and listening on  http://localhost:${port}`)
 );
