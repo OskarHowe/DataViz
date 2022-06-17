@@ -54,8 +54,12 @@ server.get("/graph/:id", async function (req, res) {
         graphid,
         "Match (n1)-[r]->(n2) return n1,r,n2"
       );
-      let graphObject = parseGraphToObject(respGraph);
-
+      let graphObject = parseGraphToObject(respGraph); //could be improved by making it async
+      let graphFetchMesure = getQueryExecutionTime(respGraph); //could be improved by making it async
+      const combinedObj = {
+        graph: graphObject,
+        meta: graphFetchMesure,
+      };
       // console.log(respGraph.metadata);
       // console.log(graphObject);
       //console.table(graphObject.edges);
@@ -63,7 +67,7 @@ server.get("/graph/:id", async function (req, res) {
       // graphObject.vertices.forEach(function (element) {
       //   console.log(element.properties);
       // });
-      res.json(graphObject);
+      res.json(combinedObj);
     } catch (e) {
       console.log(e);
       res

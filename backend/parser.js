@@ -173,6 +173,8 @@ export function parseGraphToObject(response) {
     });
   });
   return {
+    edgesIndices,
+    vertexIndices,
     edges,
     vertices,
   };
@@ -180,4 +182,11 @@ export function parseGraphToObject(response) {
 
 export function getQueryExecutionTime(response) {
   let metadata = response.metadata;
+  const graphFetchTime = parseFloat(metadata[1].match(/[+-]?\d+\.*\d+/g));
+  //const graphFetchUnit = metadata[1].match(/milliseconds/);
+  const graphFetchUnit = "ms";
+  return {
+    time: graphFetchTime,
+    unit: graphFetchUnit,
+  };
 }
