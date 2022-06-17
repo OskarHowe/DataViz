@@ -3,6 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin" />
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>DataViz Project</title>
@@ -11,12 +14,18 @@
   <body>
     <header>
       <div id="contol-panel">
-        <h1>Hello Oskar!</h1>
+        <h1>Hello CosmoTech !</h1>
         <form>
           <label for="graph-select">Choose a Graphentity</label>
           <select id="graph-select" name="graph-select">
             <option>No Option Available</option>
           </select>
+          <input
+            id="download-btn"
+            name="download-btn"
+            type="button"
+            value="Download"
+          />
         </form>
       </div>
     </header>

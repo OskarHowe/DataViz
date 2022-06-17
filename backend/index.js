@@ -38,7 +38,6 @@ server.get("/graphs", async function (req, res) {
   }
 });
 server.get("/graph/:id", async function (req, res) {
-  const startTime = performance.now();
   res.header("Access-Control-Allow-Origin", "*");
   if (!redis) {
     //server error
@@ -51,32 +50,26 @@ server.get("/graph/:id", async function (req, res) {
     try {
       let graphid = req.params.id;
       //GRAPH.QUERY id 'Match (n1)-[r]->(n2) return n1,r,n2'
+      const startTime = performance.now();
       const respGraph = await redis.graph.QUERY_RO(
         graphid,
         "Match (n1)-[r]->(n2) return n1,r,n2"
       );
+      const endTime = performance.now();
+      const startTimeParseGraph = performance.now();
       let graphObject = parseGraphToObject(respGraph); //could be improved by making it async
       let graphExecutionTime = getQueryExecutionTime(respGraph); //could be improved by making it async
+      const endTimeParseGraph = performance.now();
       //end timer and put into nodeFetchMeasure
-      const endTime = await performance.now();
-      console.log(`Start: ${startTime}, End: ${endTime}`);
+      //console.log(`Start: ${startTime}, End: ${endTime}`);
       const combinedObj = {
         graph: graphObject,
-        measures: {
-          graphFetchMeta: graphExecutionTime,
-          nodeFetchMeasure: {
-            time: endTime - startTime,
-            unit: "ms",
-          },
-        },
+        measures: [
+          { graphFetchDuration: graphExecutionTime },
+          { redisFetchDuration: endTime - startTime },
+          { graphParseDuration: endTimeParseGraph - startTimeParseGraph },
+        ],
       };
-      // console.log(respGraph.metadata);
-      // console.log(graphObject);
-      //console.table(graphObject.edges);
-      //console.table(graphObject.vertices);
-      // graphObject.vertices.forEach(function (element) {
-      //   console.log(element.properties);
-      // });
       res.json(combinedObj);
     } catch (e) {
       console.log(e);
@@ -85,7 +78,6 @@ server.get("/graph/:id", async function (req, res) {
         .send(`An error occured when fetching graph entity ${graphid}`);
     }
   }
-  //if not already ended: end timer
 });
 
 let redis;

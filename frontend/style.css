@@ -13,7 +13,7 @@ body {
 }
 header {
   width: 100%;
-  background-color: rgb(131, 255, 214);
+  background-color: rgb(149, 237, 114);
   margin: 0;
   grid-area: 1/1/1/-1;
 }
@@ -59,5 +59,9 @@ label {
 
 select {
   width: 350px;
+  padding: 5px;
+}
+#download-btn {
+  width: auto;
   padding: 5px;
 }
