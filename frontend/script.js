@@ -8,11 +8,92 @@ downloadBtn.addEventListener("click", fetchGraphEntity);
  */
 function logString(string) {
   let newP = document.createElement("p");
-  var text = document.createTextNode(string);
+  let text = document.createTextNode(string);
   newP.appendChild(text);
   textualView.appendChild(newP);
 }
+/**
+ * Logs the measure object with format 
+ * measures: [
+      0: Object { graphFetchDuration: 22.398049 }
+      1: Object { redisFetchDuration: 66.65680100023746 }
+      2: Object { graphParseDuration: 2.264869999140501 }
+      3: Object { nodeFetchDuration: 87 }
+  ]
+  specifically for userfriendly appearance
 
+  Duration Measures:
+  NodeFetch
+  |  GraphParse
+  |  |  RedisFetch
+  |  |  |  GraphFetch
+  |  |  |  22.3980
+  |  |  66.65680 
+  |  2.26486
+  87        
+ * @param {*} measure 
+ */
+function logDurationGraphically(measure) {
+  const hr1 = document.createElement("hr");
+  const hr2 = document.createElement("hr");
+
+  textualView.appendChild(hr1);
+  logString("Duration Measures:");
+  textualView.appendChild(generateNodeTree(measure.reverse(), 0));
+  textualView.appendChild(hr2);
+}
+/**
+ * <!-- <p>Duration Measures:</p>
+        <ul>
+          <li>NodeFetch</li>
+          <li>
+            <ul>
+              <li>GraphParse</li>
+              <li>
+                <ul>
+                  <li>RedisFetch</li>
+                  <li>
+                    <ul>
+                      <li>GraphFetch</li>
+                      <li>22.40 ms</li>
+                    </ul>
+                  </li>
+                  <li>66.66 ms</li>
+                </ul>
+              </li>
+              <li>2.26 ms</li>
+            </ul>
+          </li>
+          <li>87 ms</li>
+        </ul> -->
+ * take the first element in the measureArray and create a
+ * <ul></ul> from it with 3 <li>, insert into the 2nd <li> the rteurn of this function
+ * called onto the arry without the first element. if size == 1 rekusion break
+ * @param {*} measureArray
+ */
+function generateNodeTree(measureArray, index) {
+  const newUL = document.createElement("ul");
+  const li1 = document.createElement("li");
+  const li3 = document.createElement("li");
+
+  let currentKey = Object.keys(measureArray[index]).at(0); //object with only one key
+  const text1 = document.createTextNode(currentKey);
+  const text3 = document.createTextNode(`
+    ${parseInt(Object.values(measureArray[index]).at(0))} ms
+    `);
+  li1.appendChild(text1);
+  li3.appendChild(text3);
+  newUL.appendChild(li1);
+  if (index !== measureArray.length - 1) {
+    //the current element is not the last element
+    //so call recursion
+    const li2 = document.createElement("li");
+    li2.appendChild(generateNodeTree(measureArray, index + 1));
+    newUL.appendChild(li2);
+  }
+  newUL.appendChild(li3);
+  return newUL;
+}
 /**
  * Populates the <select> node, id: graph-select
  * with the elements in the given json array with the format
@@ -56,6 +137,7 @@ function fetchGraphEntity() {
       console.log(`Start: ${startTime}, End: ${endTime}`);
       console.log(json);
       logString(`Fetched ${graphId} from server`);
+      logDurationGraphically(json.measures);
     })
     .catch((error) => {
       logString(error);
