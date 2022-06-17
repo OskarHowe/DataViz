@@ -3,7 +3,7 @@ const server = express();
 const port = process.env.PORT || 25566;
 import { createClient } from "redis";
 import { getQueryExecutionTime, parseGraphToObject } from "./parser.js";
-
+import { performance } from "perf_hooks";
 //route index.html
 server.get("/", async function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -38,6 +38,7 @@ server.get("/graphs", async function (req, res) {
   }
 });
 server.get("/graph/:id", async function (req, res) {
+  const startTime = performance.now();
   res.header("Access-Control-Allow-Origin", "*");
   if (!redis) {
     //server error
@@ -55,10 +56,19 @@ server.get("/graph/:id", async function (req, res) {
         "Match (n1)-[r]->(n2) return n1,r,n2"
       );
       let graphObject = parseGraphToObject(respGraph); //could be improved by making it async
-      let graphFetchMesure = getQueryExecutionTime(respGraph); //could be improved by making it async
+      let graphExecutionTime = getQueryExecutionTime(respGraph); //could be improved by making it async
+      //end timer and put into nodeFetchMeasure
+      const endTime = await performance.now();
+      console.log(`Start: ${startTime}, End: ${endTime}`);
       const combinedObj = {
         graph: graphObject,
-        meta: graphFetchMesure,
+        measures: {
+          graphFetchMeta: graphExecutionTime,
+          nodeFetchMeasure: {
+            time: endTime - startTime,
+            unit: "ms",
+          },
+        },
       };
       // console.log(respGraph.metadata);
       // console.log(graphObject);
@@ -75,6 +85,7 @@ server.get("/graph/:id", async function (req, res) {
         .send(`An error occured when fetching graph entity ${graphid}`);
     }
   }
+  //if not already ended: end timer
 });
 
 let redis;

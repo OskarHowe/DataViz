@@ -115,9 +115,9 @@ function parsePropertiesToObject(properties) {
 
   properties[1].map((element) => {
     property[element[0]] = element[1];
-    console.log(`${element[0]}: ${element[1]}`);
+    //console.log(`${element[0]}: ${element[1]}`);
   });
-  console.log(property);
+  //console.log(property);
   return property;
 }
 export function parseGraphToObject(response) {
