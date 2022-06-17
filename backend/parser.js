@@ -160,7 +160,7 @@ export function parseGraphToObject(response) {
             props
           );
           edges.push(edge);
-          edgesIndices.push(edge);
+          edgesIndices.push(id);
         }
       } else {
         // Fail
