@@ -109,21 +109,16 @@ class Edge {
     this.properties = properties;
   }
 }
-class Property {
-  key; //Integer/String
-  value; //Integer/String
-  constructor(key, value) {
-    this.key = key;
-    this.value = value;
-  }
-}
+
 function parsePropertiesToObject(properties) {
-  let props = []; // [Property]
+  let property = {}; // [Property]
+
   properties[1].map((element) => {
-    const prop = new Property(element[0], element[1]);
-    props.push(prop);
+    property[element[0]] = element[1];
+    console.log(`${element[0]}: ${element[1]}`);
   });
-  return props;
+  console.log(property);
+  return property;
 }
 export function parseGraphToObject(response) {
   const headers = response.headers;
