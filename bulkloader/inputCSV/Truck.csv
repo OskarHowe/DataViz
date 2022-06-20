@@ -1,0 +1,21 @@
+:ID(Truck), name:STRING,parentName:STRING,volume:INT,fullness:INT,CostPerRoute:FLOAT,active:BOOL,baseCost:FLOAT,malfunctionPerYear:INT,lastFullness:INT
+302,Truck302,Avenue,3500,0,0.0,false,300.0,7,0
+303,Truck303,Avenue,3500,0,0.0,false,300.0,7,0
+304,Truck304,Avenue,3500,0,0.0,false,300.0,7,0
+305,Truck305,Avenue,3500,0,0.0,false,300.0,7,0
+306,Truck306,Avenue,3500,0,0.0,false,300.0,7,0
+307,Truck307,Avenue,3500,0,0.0,false,300.0,7,0
+308,Truck308,Avenue,3500,0,0.0,false,300.0,7,0
+309,Truck309,Avenue,3500,0,0.0,false,300.0,7,0
+310,Truck310,Avenue,3500,0,0.0,false,300.0,7,0
+311,Truck311,Avenue,3500,0,0.0,false,300.0,7,0
+312,Truck312,Avenue,3500,0,0.0,false,300.0,7,0
+313,Truck313,Avenue,3500,0,0.0,false,300.0,7,0
+314,Truck314,Avenue,3500,0,0.0,false,300.0,7,0
+315,Truck315,Avenue,3500,0,0.0,false,300.0,7,0
+316,Truck316,Avenue,3500,0,0.0,false,300.0,7,0
+317,Truck317,Avenue,3500,0,0.0,false,300.0,7,0
+318,Truck318,Avenue,3500,0,0.0,false,300.0,7,0
+319,Truck319,Avenue,3500,0,0.0,false,300.0,7,0
+320,Truck320,Avenue,3500,0,0.0,false,300.0,7,0
+321,Truck321,Avenue,3500,0,0.0,false,300.0,7,0
