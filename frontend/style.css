@@ -13,7 +13,8 @@ body {
 }
 header {
   width: 100%;
-  background-color: rgb(149, 237, 114);
+  background-color: rgb(41, 47, 51);
+  color: white;
   margin: 0;
   grid-area: 1/1/1/-1;
 }
