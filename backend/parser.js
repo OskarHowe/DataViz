@@ -109,19 +109,6 @@ class Edge {
     this.properties = properties;
   }
 }
-/**
- * Combines the request results Grqph.Query into one object which can be parsed with this parser
- * @param {*} responseEdges
- * @param {*} responseNode
- */
-export function combineNodeEdgesResponse(responseEdges, responseNode) {
-  let combinedGeaph = responseNode;
-  //add edges into the node array
-  responseEdges.data.map(function (element) {
-    responseNode.data.push(element);
-  });
-  return responseNode;
-}
 
 function parsePropertiesToObject(properties) {
   let property = {}; // [Property]
