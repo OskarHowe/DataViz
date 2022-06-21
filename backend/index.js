@@ -51,14 +51,14 @@ server.get("/graph/:id", async function (req, res) {
       let graphid = req.params.id;
       //GRAPH.QUERY id 'Match (n1)-[r]->(n2) return n1,r,n2'
       const startTime = performance.now();
-      // const respGraph = await redis.graph.QUERY_RO(
-      //   graphid,
-      //   "Match (n1)-[r]->(n2) return n1,r,n2"
-      // );
       const respGraph = await redis.graph.QUERY_RO(
         graphid,
-        "Match (a) return a"
+        "Match (n1)-[r]->(n2) return n1,r,n2"
       );
+      // const respGraph = await redis.graph.QUERY_RO(
+      //   graphid,
+      //   "Match (a) return a"
+      // );
       const endTime = performance.now();
       const startTimeParseGraph = performance.now();
       let graphObject = parseGraphToObject(respGraph); //could be improved by making it async
