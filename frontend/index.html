@@ -8,6 +8,7 @@
     <meta http-equiv="Access-Control-Allow-Origin" content="*" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link href="./favicon.ico" type="image/x-icon" rel="icon" />
     <title>DataViz Project</title>
   </head>
 
@@ -29,12 +30,14 @@
         </form>
       </div>
     </header>
-    <main><p>Here the Graph will be displayed</p></main>
+    <main id="graph-node"></main>
     <aside>
       <div id="log">
         <p><b>Here is a Log:</b></p>
       </div>
     </aside>
     <script src="./script.js"></script>
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g6/4.3.11/dist/g6.min.js"></script>
+    <script type="module" src="./g6-graph.js"></script>
   </body>
 </html>
