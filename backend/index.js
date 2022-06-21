@@ -1,13 +1,13 @@
 import express from "express";
+import cors from "cors";
 const server = express();
 const port = process.env.PORT || 25566;
 import { createClient } from "redis";
 import { getQueryExecutionTime, parseGraphToObject } from "./parser.js";
 import { performance } from "perf_hooks";
+server.use(cors());
 //route index.html
 server.get("/", async function (req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
-
   if (!redis) {
     //the client is not yet initialized
     res
@@ -19,7 +19,6 @@ server.get("/", async function (req, res) {
 });
 //route graphs: returns a list of strings which are the keys of the graph entities
 server.get("/graphs", async function (req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
   if (!redis) {
     //server error
     res
@@ -38,7 +37,6 @@ server.get("/graphs", async function (req, res) {
   }
 });
 server.get("/graph/:id", async function (req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
   if (!redis) {
     //server error
     res
