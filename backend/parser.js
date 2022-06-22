@@ -120,6 +120,12 @@ function parsePropertiesToObject(properties) {
   //console.log(property);
   return property;
 }
+/**
+ * Can I guaranty that the IDs of the edges and nodes are unique or do I have to remap them?
+ * No I cant, IDs for vertices and edges can be equal
+ * @param {*} response
+ * @returns
+ */
 export function parseGraphToObject(response) {
   const headers = response.headers;
   const graph = response.data;

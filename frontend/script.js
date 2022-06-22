@@ -1,7 +1,83 @@
 const textualView = document.getElementById("log");
 const graphSelect = document.getElementById("graph-select");
 const downloadBtn = document.getElementById("download-btn");
+const graphNode = document.getElementById("graph-node");
 downloadBtn.addEventListener("click", fetchGraphEntity);
+
+const testdata = {
+  // The array of nodes
+  nodes: [
+    {
+      id: "node1", // String, unique and required
+      //x: 100, // Number, the x coordinate
+      //y: 200, // Number, the y coordinate
+    },
+    {
+      id: "node2", // String, unique and required
+      //x: 300, // Number, the x coordinate
+      //y: 200, // Number, the y coordinate
+    },
+  ],
+  // The array of edges
+  edges: [
+    {
+      source: "node1", // String, required, the id of the source node
+      target: "node2", // String, required, the id of the target node
+      label: "coucou!",
+    },
+  ],
+};
+class G6Vertex {
+  id; // Integer
+  label; // String[]
+  constructor(id, label) {
+    this.id = id;
+    this.label = label;
+  }
+}
+class G6Edge {
+  label; // String[]
+  source; // Integer
+  target; // Integer
+  constructor(label, source, target) {
+    this.label = label;
+    this.source = source;
+    this.target = target;
+  }
+}
+function convertGraphJSONtoG6Format(grapJsonObj) {
+  let g6Graph = {
+    nodes: [],
+    edges: [],
+  };
+  grapJsonObj.vertices.forEach((node) => {
+    const g6Vertex = new G6Vertex("node" + node.id, (node.label = node.labels));
+    g6Graph.nodes.push(g6Vertex);
+  });
+  grapJsonObj.edges.forEach((edge) => {
+    const g6Edge = new G6Edge(
+      edge.type,
+      "node" + edge.sourceNode,
+      "node" + edge.destinationNode
+    );
+    g6Graph.edges.push(g6Edge);
+  });
+  console.log(g6Graph.nodes);
+  return g6Graph;
+}
+
+function displayGraph(grapJsonObj, cavasWidth, canvasHeight, container) {
+  const data = convertGraphJSONtoG6Format(grapJsonObj);
+  const graph = new G6.Graph({
+    container: container, // String | HTMLElement, required, the id of DOM element or an HTML node
+    width: cavasWidth, // Number, required, the width of the graph
+    height: canvasHeight, // Number, required, the height of the graph
+  });
+  console.log(`canvasWidth: ${cavasWidth}, canvasHeight: ${canvasHeight}`);
+  graph.data(data); // Load the data defined in Step 2
+  graph.render(); // Render the graph
+}
+
 /**
  * Appends a given string to the textualView node
  * @param {String} string
@@ -134,10 +210,20 @@ function fetchGraphEntity() {
     .then((json) => {
       const endTime = window.performance.now();
       json.measures.push({ nodeFetchDuration: endTime - startTime });
-      console.log(`Start: ${startTime}, End: ${endTime}`);
-      console.log(json);
       logString(`Fetched ${graphId} from server`);
+      const startTimeDisplayGraph = window.performance.now();
+      displayGraph(
+        json.graph,
+        graphNode.clientWidth,
+        graphNode.clientHeight,
+        "graph-node"
+      );
+      const endTimeDisplayGraph = window.performance.now();
+      json.measures.push({
+        graphDisplayDuration: endTimeDisplayGraph - startTimeDisplayGraph,
+      });
       logDurationGraphically(json.measures);
+      console.log(json);
     })
     .catch((error) => {
       logString(error);
