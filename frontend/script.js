@@ -2,37 +2,26 @@ const textualView = document.getElementById("log");
 const graphSelect = document.getElementById("graph-select");
 const downloadBtn = document.getElementById("download-btn");
 const graphNode = document.getElementById("graph-node");
+const graphicsType = [
+  "circle",
+  "rect",
+  "ellipse",
+  "triangle",
+  "diamond",
+  "star",
+];
+const graphicsColors = ["red", "green", "blue", "yellow", "pink"];
+
 downloadBtn.addEventListener("click", fetchGraphEntity);
 
-const testdata = {
-  // The array of nodes
-  nodes: [
-    {
-      id: "node1", // String, unique and required
-      //x: 100, // Number, the x coordinate
-      //y: 200, // Number, the y coordinate
-    },
-    {
-      id: "node2", // String, unique and required
-      //x: 300, // Number, the x coordinate
-      //y: 200, // Number, the y coordinate
-    },
-  ],
-  // The array of edges
-  edges: [
-    {
-      source: "node1", // String, required, the id of the source node
-      target: "node2", // String, required, the id of the target node
-      label: "coucou!",
-    },
-  ],
-};
 class G6Vertex {
   id; // Integer
   label; // String[]
-  constructor(id, label) {
+  class;
+  constructor(id, label, classe) {
     this.id = id;
     this.label = label;
+    this.class = classe;
   }
 }
 class G6Edge {
@@ -45,13 +34,54 @@ class G6Edge {
     this.target = target;
   }
 }
+function getAttributeCombinationOnTheFly(
+  attributeArray,
+  elementClass,
+  usedAttributesMap
+) {
+  if (!usedAttributesMap.has(elementClass)) {
+    const usedAttributesArray = Array.from(usedAttributesMap.values());
+    let freeAttributes = attributeArray.filter(
+      (val) => !usedAttributesArray.includes(val)
+    );
+    if (freeAttributes.length > 0) {
+      usedAttributesMap.set(elementClass, freeAttributes[0]);
+    } else {
+      usedAttributesMap.set(elementClass, attributeArray[0]); //bad default case...
+      console.log(
+        `The amount of elemet classes is bigger then the possible attributes so attributes will be used multiple times`
+      );
+    }
+  }
+  return usedAttributesMap.get(elementClass);
+}
 function convertGraphJSONtoG6Format(grapJsonObj) {
   let g6Graph = {
     nodes: [],
     edges: [],
+    layout: {
+      type: "force",
+      preventOverlap: true,
+      linkDistance: 100, // The link distance is 100
+    },
+    modes: {
+      default: ["drag-canvas", "zoom-canvas", "drag-node"], // Allow users to drag canvas, zoom canvas, and drag nodes
+    },
   };
+  let usedAttributesMap = new Map();
   grapJsonObj.vertices.forEach((node) => {
-    const g6Vertex = new G6Vertex("node" + node.id, (node.label = node.labels));
+    let color = getAttributeCombinationOnTheFly(
+      graphicsColors,
+      node.labels,
+      usedAttributesMap
+    );
+    const g6Vertex = {
+      id: "node" + node.id,
+      class: node.labels,
+      style: {
+        fill: color,
+      },
+    };
     g6Graph.nodes.push(g6Vertex);
   });
   grapJsonObj.edges.forEach((edge) => {
@@ -67,6 +97,10 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
 }
 
 function displayGraph(grapJsonObj, cavasWidth, canvasHeight, container) {
+  let children = graphNode.childNodes;
+  children.forEach((child) => {
+    graphNode.removeChild(child);
+  });
   const data = convertGraphJSONtoG6Format(grapJsonObj);
   const graph = new G6.Graph({
     container: container, // String | HTMLElement, required, the id of DOM element or an HTML node
