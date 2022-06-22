@@ -10,7 +10,18 @@ const graphicsType = [
   "diamond",
   "star",
 ];
-const graphicsColors = ["red", "green", "blue", "yellow", "pink"];
+const graphicsColors = [
+  "#5F95FF", // blue
+  "#61DDAA",
+  "#65789B",
+  "#F6BD16",
+  "#7262FD",
+  "#78D3F8",
+  "#9661BC",
+  "#F6903D",
+  "#008685",
+  "#F08BB4",
+];
 
 downloadBtn.addEventListener("click", fetchGraphEntity);
 
@@ -49,16 +60,20 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
     );
     const g6Vertex = {
       id: "node" + node.id,
+      //label: node.labels,
       class: node.labels,
       style: {
         fill: color,
+        opacity: 0.2,
+        stroke: color,
+        strokeOpacity: 0.85,
       },
     };
     g6Graph.nodes.push(g6Vertex);
   });
   grapJsonObj.edges.forEach((edge) => {
     const g6Edge = {
-      label: edge.type, // String[]
+      //label: edge.type, // String[]
       source: "node" + edge.sourceNode, // Integer
       target: "node" + edge.destinationNode, // Integer
       labelCfg: {
