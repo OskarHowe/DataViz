@@ -3,7 +3,11 @@ import cors from "cors";
 const server = express();
 const port = process.env.PORT || 25566;
 import { createClient } from "redis";
-import { getQueryExecutionTime, parseGraphToObject } from "./parser.js";
+import {
+  getQueryExecutionTime,
+  parseGraphToObject,
+  combineNodeEdgesResponse,
+} from "./parser.js";
 import { performance } from "perf_hooks";
 server.use(cors());
 //route index.html
@@ -49,24 +53,31 @@ server.get("/graph/:id", async function (req, res) {
       let graphid = req.params.id;
       //GRAPH.QUERY id 'Match (n1)-[r]->(n2) return n1,r,n2'
       const startTime = performance.now();
-      const respGraph = await redis.graph.QUERY_RO(
+      const respNodes = await redis.graph.QUERY_RO(
         graphid,
-        "Match (n1)-[r]->(n2) return n1,r,n2"
+        "Match (a) return a"
       );
-      // const respGraph = await redis.graph.QUERY_RO(
-      //   graphid,
-      //   "Match (a) return a"
-      // );
+      const respEdges = await redis.graph.QUERY_RO(
+        graphid,
+        "Match (n1)-[r]->(n2) return r"
+      );
       const endTime = performance.now();
       const startTimeParseGraph = performance.now();
+      const respGraph = combineNodeEdgesResponse(respEdges, respNodes);
       let graphObject = parseGraphToObject(respGraph); //could be improved by making it async
-      let graphExecutionTime = getQueryExecutionTime(respGraph); //could be improved by making it async
+      let nodesFetchExecutionTime = getQueryExecutionTime(respNodes);
+      let edgesFetchExecutionTime = getQueryExecutionTime(respEdges);
+
+      let graphExecutionTime =
+        nodesFetchExecutionTime + edgesFetchExecutionTime; //could be improved by making it async
       const endTimeParseGraph = performance.now();
       //end timer and put into nodeFetchMeasure
       //console.log(`Start: ${startTime}, End: ${endTime}`);
       const combinedObj = {
         graph: graphObject,
         measures: [
+          { nodesFetchDuration: nodesFetchExecutionTime },
+          { edgesFetchDuration: edgesFetchExecutionTime },
           { graphFetchDuration: graphExecutionTime },
           { redisFetchDuration: endTime - startTime },
           { graphParseDuration: endTimeParseGraph - startTimeParseGraph },
