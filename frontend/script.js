@@ -14,26 +14,6 @@ const graphicsColors = ["red", "green", "blue", "yellow", "pink"];
 
 downloadBtn.addEventListener("click", fetchGraphEntity);
 
-class G6Vertex {
-  id; // Integer
-  label; // String[]
-  class;
-  constructor(id, label, classe) {
-    this.id = id;
-    this.label = label;
-    this.class = classe;
-  }
-}
-class G6Edge {
-  label; // String[]
-  source; // Integer
-  target; // Integer
-  constructor(label, source, target) {
-    this.label = label;
-    this.source = source;
-    this.target = target;
-  }
-}
 function getAttributeCombinationOnTheFly(
   attributeArray,
   elementClass,
@@ -59,14 +39,6 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
   let g6Graph = {
     nodes: [],
     edges: [],
-    layout: {
-      type: "force",
-      preventOverlap: true,
-      linkDistance: 100, // The link distance is 100
-    },
-    modes: {
-      default: ["drag-canvas", "zoom-canvas", "drag-node"], // Allow users to drag canvas, zoom canvas, and drag nodes
-    },
   };
   let usedAttributesMap = new Map();
   grapJsonObj.vertices.forEach((node) => {
@@ -85,11 +57,14 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
     g6Graph.nodes.push(g6Vertex);
   });
   grapJsonObj.edges.forEach((edge) => {
-    const g6Edge = new G6Edge(
-      edge.type,
-      "node" + edge.sourceNode,
-      "node" + edge.destinationNode
-    );
+    const g6Edge = {
+      label: edge.type, // String[]
+      source: "node" + edge.sourceNode, // Integer
+      target: "node" + edge.destinationNode, // Integer
+      labelCfg: {
+        autoRotate: true, // Whether to rotate the label according to the edges
+      },
+    };
     g6Graph.edges.push(g6Edge);
   });
   console.log(g6Graph.nodes);
@@ -106,6 +81,26 @@ function displayGraph(grapJsonObj, cavasWidth, canvasHeight, container) {
     container: container, // String | HTMLElement, required, the id of DOM element or an HTML node
     width: cavasWidth, // Number, required, the width of the graph
     height: canvasHeight, // Number, required, the height of the graph
+    modes: {
+      default: ["drag-canvas", "zoom-canvas", "drag-node"], // Allow users to drag canvas, zoom canvas, and drag nodes
+    },
+    layout: {
+      type: "gForce",
+      center: [200, 200], // The center of the graph by default
+      linkDistance: 1,
+      nodeStrength: 1000,
+      edgeStrength: 200,
+      nodeSize: 30,
+      onTick: () => {
+        console.log("ticking");
+      },
+      onLayoutEnd: () => {
+        console.log("force layout done");
+      },
+      workerEnabled: true, // Whether to activate web-worker
+      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
+      // more options are shown below
+    },
   });
   console.log(`canvasWidth: ${cavasWidth}, canvasHeight: ${canvasHeight}`);
   graph.data(data); // Load the data defined in Step 2
