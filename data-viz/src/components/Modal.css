@@ -95,3 +95,19 @@ select:hover {
   background-color: #4c8fdc;
   opacity: 90%;
 }
+.close-button {
+  color: white;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  box-shadow: none;
+  background: none;
+  border-width: 0px;
+  float: right;
+  margin-right: 4px;
+  transform: rotate(45deg);
+}
+.close-button:hover {
+  color: #292f33;
+}

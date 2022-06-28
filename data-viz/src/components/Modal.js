@@ -9,7 +9,12 @@ class Modal extends React.Component {
   render() {
     return (
       <div className="Modal">
-        {/* <div id="closeX">+</div> */}
+        <button
+          className="close-button"
+          onClick={() => alert("close the modal!")}
+        >
+          +
+        </button>
         <h3>Display your Digital Twin Entity</h3>
         <hr />
         <div className="settingsElement">
