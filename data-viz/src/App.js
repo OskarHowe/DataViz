@@ -3,6 +3,7 @@ import logo from "./cosmotechDark.png";
 import Modal from "./components/Modal";
 import "./App.css";
 import BlueButton from "./components/BlueButton";
+import G6Func from "./components/G6Func";
 
 class App extends React.Component {
   constructor(props) {
@@ -10,8 +11,10 @@ class App extends React.Component {
     this.state = {
       displayModal: false,
       graphRedisStrings: null,
-      currentGraphEntity: null,
+      selectedRedisGraphString: null,
+      loadedGrapEntityJSON: null,
       loading: true,
+      renderG6GRaph: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleModalSubmit = this.handleModalSubmit.bind(this);
@@ -61,6 +64,10 @@ class App extends React.Component {
           graphDisplayDuration: endTimeDisplayGraph - startTimeDisplayGraph,
         });
         console.log(json);
+        this.setState({ loadedGrapEntityJSON: json });
+      })
+      .then(() => {
+        this.setState({ renderG6GRaph: true });
       })
       .catch((error) => {
         console.log(`Error when fetching Graphentity: ${error}`);
@@ -69,11 +76,10 @@ class App extends React.Component {
   handleModalSubmit(graphRedisString) {
     this.setState({
       displayModal: false,
-      currentGraphEntity: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
+      selectedRedisGraphString: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
     });
     this.fetchGraphEntity(graphRedisString);
   }
-  visualizeGraph() {}
   render() {
     return (
       <div className="App">
@@ -92,6 +98,14 @@ class App extends React.Component {
           />
         ) : null}
         <main className="graph-node">
+          {this.state.renderG6GRaph ? (
+            <G6Func
+              jsonGraph={this.state.loadedGrapEntityJSON.graph}
+              width={1920}
+              height={900}
+            />
+          ) : null}
+
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
         </main>
       </div>
