@@ -5,14 +5,13 @@ class BlueButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: props.id,
       text: props.text,
     };
   }
   render() {
     return (
       <button
-        id={this.state.id}
+        id={this.props.id}
         className="BlueButton"
         onClick={this.props.onClick}
       >
