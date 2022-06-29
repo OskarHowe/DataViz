@@ -1,0 +1,18 @@
+.SelectSimple {
+  width: 201px;
+  height: 39px;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 8px 8px 8px 8px;
+  background: #4c4f52;
+  border-color: #7a7a7a;
+  border-width: 0.25px;
+  border-style: solid;
+  border-radius: 3px 3px 3px 3px;
+  color: white;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 18px;
+}
+.SelectSimple:hover {
+  opacity: 90%;
+}

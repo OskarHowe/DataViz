@@ -1,0 +1,19 @@
+.BlueButton {
+  color: white;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 26px;
+  font-weight: 100;
+  width: 148px;
+  height: 42px;
+  box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.19);
+  background: #4c8fdc;
+  border-width: 0px;
+  border-style: solid;
+  border-radius: 3px 3px 3px 3px;
+  justify-self: left;
+  align-self: center;
+}
+.BlueButton:hover {
+  background-color: #4c8fdc;
+  opacity: 90%;
+}

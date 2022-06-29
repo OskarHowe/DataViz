@@ -1,0 +1,14 @@
+.CloseButton {
+  color: white;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  box-shadow: none;
+  background: none;
+  border-width: 0px;
+  transform: rotate(45deg);
+}
+.CloseButton:hover {
+  color: #292f33;
+}

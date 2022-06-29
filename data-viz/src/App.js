@@ -1,7 +1,10 @@
 import React from "react";
 import logo from "./cosmotechDark.png";
 import Modal from "./components/Modal";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 import "./App.css";
+import BlueButton from "./components/BlueButton";
 
 class App extends React.Component {
   // const [graphRedisStrings, setPosts] = useState([]);
@@ -24,15 +27,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalToggle: false,
+      displayModal: false,
     };
+    this.toggleModal = this.toggleModal.bind(this);
   }
-  // modalHanler(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     modalToggle: true,
-  //   });
-  // }
+  toggleModal() {
+    console.log("toggleModal");
+    this.setState({ displayModal: !this.state.displayModal });
+  }
   render() {
     return (
       <div className="App">
@@ -43,8 +45,24 @@ class App extends React.Component {
           </div>
           <img src={logo} className="App-logo" alt="logo" />
         </header>
-        <Modal></Modal>
-        <main className="graph-node"></main>
+        {this.state.displayModal ? (
+          <Modal
+            toggle={this.toggleModal}
+            remoteEntities={["hallo", "was", "geht?"]}
+          />
+        ) : null}
+        <main className="graph-node">
+          {/* <Fab
+            color="primary"
+            aria-label="add"
+            onClick={() => {
+              this.toggleModal();
+            }}
+          >
+            <AddIcon />
+          </Fab> */}
+          <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
+        </main>
       </div>
     );
   }
