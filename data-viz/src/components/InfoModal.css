@@ -1,0 +1,59 @@
+.InfoModal {
+  position: absolute;
+  background-color: #4c4f52;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28em;
+  height: 34em;
+  border: 1px solid #292f33;
+  border-radius: 3px;
+  box-shadow: 5px 6px 3px rgba(0, 0, 0, 0.29);
+  color: white;
+  font-family: "Source Sans Pro", sans-serif;
+}
+.InfoModal hr {
+  border-top: 1px solid #292f33;
+  border-bottom: 0px;
+}
+.header-infomodal {
+  margin: 20px, 2px, 2px, 2px;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+img {
+  height: 4em;
+  width: 4em;
+}
+.hr-paragraph {
+  border-top: 1px solid #292f33;
+  border-bottom: 0px;
+  margin-left: 2em;
+  margin-right: 2em;
+  grid-column: 1 / -1;
+}
+.InfoModal h3 {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 24px;
+}
+.InfoModal h4 {
+  font-size: 20px;
+}
+.InfoModal h5 {
+  font-size: 21px;
+  font-weight: 100;
+}
+.InfoModal p {
+  font-weight: 100;
+  font-size: 17px;
+  margin: 0;
+  margin-bottom: 1em;
+  justify-self: left;
+  margin-left: 1em;
+}
+.CloseButton {
+  float: right;
+  margin-right: 4px;
+}

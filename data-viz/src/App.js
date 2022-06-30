@@ -3,6 +3,7 @@ import logo from "./cosmotechDark.png";
 import Modal from "./components/Modal";
 import "./App.css";
 import BlueButton from "./components/BlueButton";
+import InfoModal from "./components/InfoModal";
 import G6Func from "./components/G6Func";
 
 class App extends React.Component {
@@ -10,6 +11,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       displayModal: false,
+      displayInfoModal: true,
       graphRedisStrings: null,
       selectedRedisGraphString: null,
       loadedGrapEntityJSON: null,
@@ -17,6 +19,8 @@ class App extends React.Component {
       renderG6GRaph: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
+    this.toggleInfoModal = this.toggleInfoModal.bind(this);
+
     this.handleModalSubmit = this.handleModalSubmit.bind(this);
     this.fetchGraphIDs();
   }
@@ -25,12 +29,15 @@ class App extends React.Component {
    */
   toggleModal() {
     this.setState({ displayModal: !this.state.displayModal });
-    /**
-     * Entrypoint of the website.
-     * Fetches on launch the graph entities from the server to load them into the
-     * select node
-     */
   }
+  toggleInfoModal() {
+    this.setState({ displayInfoModal: !this.state.displayInfoModal });
+  }
+  /**
+   * Entrypoint of the website.
+   * Fetches on launch the graph entities from the server to load them into the
+   * select node
+   */
   fetchGraphIDs() {
     fetch("http://localhost:25566/graphs") //because fetch returns a promise
       .then((response) => {
@@ -53,6 +60,7 @@ class App extends React.Component {
   /**
    * gets as input the selected graphID from the dropdown menu
    * fetches a graph entity from the server
+   * and changes the state to render
    */
   fetchGraphEntity(graphID) {
     let graphId = graphID;
@@ -69,12 +77,6 @@ class App extends React.Component {
         const endTime = window.performance.now();
         json.measures.push({ nodeFetchDuration: endTime - startTime });
         console.log(`Fetched ${graphId} from server`);
-        const startTimeDisplayGraph = window.performance.now();
-        //displayGraph();
-        const endTimeDisplayGraph = window.performance.now();
-        json.measures.push({
-          graphDisplayDuration: endTimeDisplayGraph - startTimeDisplayGraph,
-        });
         console.log(json);
         this.setState({ loadedGrapEntityJSON: json });
       })
@@ -91,10 +93,18 @@ class App extends React.Component {
    * @param {*} graphRedisString
    */
   handleModalSubmit(graphRedisString) {
+    if (graphRedisString === this.state.selectedRedisGraphString) {
+      this.setState({
+        displayModal: false,
+      });
+      return;
+    }
     this.setState({
       displayModal: false,
       selectedRedisGraphString: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
+      renderG6GRaph: false,
     });
+    this.setState({ renderG6GRaph: false });
     this.fetchGraphEntity(graphRedisString);
   }
   render() {
@@ -122,7 +132,7 @@ class App extends React.Component {
               height={window.innerHeight - 80}
             />
           ) : null}
-
+          <InfoModal toggle={this.toggleInfoModal} />
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
         </main>
       </div>

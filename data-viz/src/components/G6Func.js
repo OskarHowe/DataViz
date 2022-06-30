@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import G6 from "@antv/g6";
-
+import icons from "./iconsBase64";
 const graphicsColors = [
   "#5F95FF", // blue
   "#61DDAA", //green
   "#ffb039", //cosmogold
-  "#F6BD16",
-  "#7262FD",
-  "#78D3F8",
-  "#9661BC",
-  "#F6903D",
-  "#008685",
-  "#F08BB4",
+  "#F08BB4", //pink
+  "#F6BD16", //orange
+  "#7262FD", //blue
+  "#78D3F8", //azure
+  "#9661BC", //purple
+  "#F6903D", //orange
 ];
 function getAttributeCombinationOnTheFly(
   attributeArray,
@@ -42,21 +41,53 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
     edges: [],
   };
   let usedAttributesMap = new Map();
+  let usedIconsMap = new Map();
   grapJsonObj.vertices.forEach((node) => {
     let color = getAttributeCombinationOnTheFly(
       graphicsColors,
       node.labels,
       usedAttributesMap
     );
+    let icon = getAttributeCombinationOnTheFly(
+      icons,
+      node.labels,
+      usedIconsMap
+    );
     const g6Vertex = {
       id: "node" + node.id,
       label: node.labels,
+      labelCfg: {
+        position: "bottom",
+        offset: 5,
+        style: {
+          fill: "#ebebeb",
+          // fontFamily: ["Source Sans Pro", "sans-serif"],
+        },
+      },
       class: node.labels,
+      size: 40,
       style: {
         fill: color,
         opacity: 0.2,
         stroke: color,
         strokeOpacity: 0.85,
+      },
+      icon: {
+        show: true,
+        width: 30,
+        height: 30,
+        img: icon,
+      },
+      stateStyles: {
+        // The node style when the state 'hover' is true
+        hover: {
+          opacity: 0.4,
+        },
+        // The node style when the state 'click' is true
+        click: {
+          stroke: "#000",
+          lineWidth: 3,
+        },
       },
     };
     g6Graph.nodes.push(g6Vertex);
@@ -66,6 +97,13 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
       //label: edge.type, // String[]
       source: "node" + edge.sourceNode, // Integer
       target: "node" + edge.destinationNode, // Integer
+      type: "quadratic",
+      style: {
+        opacity: 0.3, // The opacity of edges
+        stroke: "#4c4f52", // The color of the edges
+        endArrow: true,
+        lineWidth: 6,
+      },
       labelCfg: {
         autoRotate: true, // Whether to rotate the label according to the edges
       },
@@ -94,11 +132,13 @@ export default function G6Func(props) {
         },
         layout: {
           type: "gForce",
-          center: [200, 200], // The center of the graph by default
+          center: [
+            ref.current.parentElement.offsetWidth / 2,
+            ref.current.parentElement.offsetHeight / 2,
+          ], // The center of the graph by default
           linkDistance: 1,
           nodeStrength: 1000,
           edgeStrength: 200,
-          nodeSize: 30,
           onTick: () => {
             console.log("ticking");
           },
@@ -111,8 +151,32 @@ export default function G6Func(props) {
         },
       });
     }
+
     graph.data(convertGraphJSONtoG6Format(props.jsonGraph));
     graph.render();
+    // Mouse enter a node
+    graph.on("node:mouseenter", (e) => {
+      const nodeItem = e.item; // Get the target item
+      graph.setItemState(nodeItem, "hover", true); // Set the state 'hover' of the item to be true
+    });
+
+    // Mouse leave a node
+    graph.on("node:mouseleave", (e) => {
+      const nodeItem = e.item; // Get the target item
+      graph.setItemState(nodeItem, "hover", false); // Set the state 'hover' of the item to be false
+    });
+    // Click a node
+    graph.on("node:click", (e) => {
+      // Swich the 'click' state of the node to be false
+      const clickNodes = graph.findAllByState("node", "click");
+      clickNodes.forEach((cn) => {
+        graph.setItemState(cn, "click", false);
+      });
+      console.log(`ClickEvenet: `);
+      console.log(e);
+      const nodeItem = e.item; // et the clicked item
+      graph.setItemState(nodeItem, "click", true); // Set the state 'click' of the item to be true
+    });
   }, []);
 
   return <div ref={ref}></div>;
