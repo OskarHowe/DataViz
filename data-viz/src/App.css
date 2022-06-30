@@ -1,10 +1,11 @@
 .App {
   text-align: center;
+  overflow: hidden;
 }
 
 .App-header {
   background-color: #292f33;
-  height: 80px;
+  height: 8vh;
   color: white;
   display: flex;
   flex-direction: row;
@@ -39,4 +40,7 @@
   bottom: 0.5em;
   left: 0.5em;
   z-index: 200;
+}
+.graph-node {
+  height: 92vh;
 }

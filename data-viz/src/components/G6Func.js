@@ -2,6 +2,40 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import G6 from "@antv/g6";
 
+const graphicsColors = [
+  "#5F95FF", // blue
+  "#61DDAA", //green
+  "#ffb039", //cosmogold
+  "#F6BD16",
+  "#7262FD",
+  "#78D3F8",
+  "#9661BC",
+  "#F6903D",
+  "#008685",
+  "#F08BB4",
+];
+function getAttributeCombinationOnTheFly(
+  attributeArray,
+  elementClass,
+  usedAttributesMap
+) {
+  if (!usedAttributesMap.has(elementClass)) {
+    const usedAttributesArray = Array.from(usedAttributesMap.values());
+    let freeAttributes = attributeArray.filter(
+      (val) => !usedAttributesArray.includes(val)
+    );
+    if (freeAttributes.length > 0) {
+      usedAttributesMap.set(elementClass, freeAttributes[0]);
+    } else {
+      usedAttributesMap.set(elementClass, attributeArray[0]); //bad default case...
+      console.log(
+        `The amount of elemet classes is bigger then the possible attributes so attributes will be used multiple times`
+      );
+    }
+  }
+  return usedAttributesMap.get(elementClass);
+}
+
 function convertGraphJSONtoG6Format(grapJsonObj) {
   let g6Graph = {
     nodes: [],
@@ -9,19 +43,19 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
   };
   let usedAttributesMap = new Map();
   grapJsonObj.vertices.forEach((node) => {
-    //   let color = getAttributeCombinationOnTheFly(
-    //     graphicsColors,
-    //     node.labels,
-    //     usedAttributesMap
-    //   );
+    let color = getAttributeCombinationOnTheFly(
+      graphicsColors,
+      node.labels,
+      usedAttributesMap
+    );
     const g6Vertex = {
       id: "node" + node.id,
-      //label: node.labels,
+      label: node.labels,
       class: node.labels,
       style: {
-        //fill: color,
-        //opacity: 0.2,
-        //stroke: color,
+        fill: color,
+        opacity: 0.2,
+        stroke: color,
         strokeOpacity: 0.85,
       },
     };
@@ -53,8 +87,8 @@ export default function G6Func(props) {
     if (!graph) {
       graph = new G6.Graph({
         container: ReactDOM.findDOMNode(ref.current),
-        width: props.width,
-        height: props.height,
+        width: ref.current.parentElement.offsetWidth,
+        height: ref.current.parentElement.offsetHeight,
         modes: {
           default: ["drag-canvas", "zoom-canvas", "drag-node"], // Allow users to drag canvas, zoom canvas, and drag nodes
         },

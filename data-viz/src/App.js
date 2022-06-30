@@ -20,8 +20,16 @@ class App extends React.Component {
     this.handleModalSubmit = this.handleModalSubmit.bind(this);
     this.fetchGraphIDs();
   }
+  /**
+   * Inverts the visibility of the modal
+   */
   toggleModal() {
     this.setState({ displayModal: !this.state.displayModal });
+    /**
+     * Entrypoint of the website.
+     * Fetches on launch the graph entities from the server to load them into the
+     * select node
+     */
   }
   fetchGraphIDs() {
     fetch("http://localhost:25566/graphs") //because fetch returns a promise
@@ -42,6 +50,10 @@ class App extends React.Component {
         console.log(error);
       });
   }
+  /**
+   * gets as input the selected graphID from the dropdown menu
+   * fetches a graph entity from the server
+   */
   fetchGraphEntity(graphID) {
     let graphId = graphID;
     //logString(`Selected ${graphId} to download`);
@@ -73,6 +85,11 @@ class App extends React.Component {
         console.log(`Error when fetching Graphentity: ${error}`);
       });
   }
+  /**
+   * closes the modal and calls a function to fetch a specific redis graph entity
+   *
+   * @param {*} graphRedisString
+   */
   handleModalSubmit(graphRedisString) {
     this.setState({
       displayModal: false,
@@ -101,8 +118,8 @@ class App extends React.Component {
           {this.state.renderG6GRaph ? (
             <G6Func
               jsonGraph={this.state.loadedGrapEntityJSON.graph}
-              width={1920}
-              height={900}
+              width={window.innerWidth}
+              height={window.innerHeight - 80}
             />
           ) : null}
 
