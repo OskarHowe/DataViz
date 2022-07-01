@@ -17,9 +17,10 @@
   border-bottom: 0px;
 }
 .header-infomodal {
-  margin: 20px, 2px, 2px, 2px;
+  margin: 0.5em 2em 0.5em 0.5em;
   display: flex;
   flex-flow: row;
+  overflow: hidden;
   justify-content: space-between;
 }
 img {
@@ -39,7 +40,9 @@ img {
   font-size: 24px;
 }
 .InfoModal h4 {
-  font-size: 20px;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
 }
 .InfoModal h5 {
   font-size: 21px;
@@ -49,11 +52,37 @@ img {
   font-weight: 100;
   font-size: 17px;
   margin: 0;
-  margin-bottom: 1em;
-  justify-self: left;
-  margin-left: 1em;
+  padding: 0;
 }
 .CloseButton {
   float: right;
   margin-right: 4px;
+}
+.edges-info {
+  width: fit-content;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.5em;
+  align-items: center;
+}
+.arrowImg {
+  width: 4em;
+  height: auto;
+}
+ul {
+  overflow-y: auto;
+  height: 27em;
+  list-style-type: none;
+  padding: 0;
+  padding-left: 1em;
+  margin: 1em;
+}
+li {
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.2em;
 }

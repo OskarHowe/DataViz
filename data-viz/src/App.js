@@ -132,7 +132,18 @@ class App extends React.Component {
               height={window.innerHeight - 80}
             />
           ) : null}
-          <InfoModal toggle={this.toggleInfoModal} />
+          <InfoModal
+            title="Operation : Slice"
+            inEdges="100"
+            outEdges="2"
+            attributes={[
+              { id: "slice23" },
+              {
+                name: "Thisis he longes fucking ever name to test the scroll behaviour of the ul which will be fucing ennozing",
+              },
+            ]}
+            toggle={this.toggleInfoModal}
+          />
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
         </main>
       </div>

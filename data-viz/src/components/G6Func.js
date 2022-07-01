@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import G6 from "@antv/g6";
-import icons from "./iconsBase64";
+import icons from "../images/iconsBase64";
 const graphicsColors = [
   "#5F95FF", // blue
   "#61DDAA", //green
