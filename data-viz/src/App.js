@@ -92,7 +92,12 @@ class App extends React.Component {
         json.measures.push({ nodeFetchDuration: endTime - startTime });
         console.log(`Fetched ${graphId} from server`);
         console.log(json);
+        let verticesMap = new Map();
+        json.graph.vertices.map((value) => {
+          verticesMap.set(value.id, value);
+        });
         this.setState({ loadedGrapEntityJSON: json });
+        this.setState({ verticesMap: verticesMap });
       })
       .then(() => {
         this.setState({ renderG6GRaph: true });
