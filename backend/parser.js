@@ -89,10 +89,14 @@ class Vertex {
   id; // Integer
   labels; // String[]
   properties; // {key:String -> String}
+  toVertices; //integer [] nodeIDs
+  fromVertices; //integer [] nodeIDs
   constructor(id, labels, properties) {
     this.id = id;
     this.labels = labels;
     this.properties = properties;
+    this.toVertices = [];
+    this.fromVertices = [];
   }
 }
 class Edge {
@@ -122,7 +126,15 @@ export function combineNodeEdgesResponse(responseEdges, responseNode) {
   });
   return responseNode;
 }
-
+//helper function because Map cant be serialized
+//https://stackoverflow.com/questions/29085197/how-do-you-json-stringify-an-es6-map
+function mapToArrayofObjects(map) {
+  let vertices = Array(map.size);
+  map.forEach(function (value, key) {
+    vertices[key] = value;
+  });
+  return vertices;
+}
 function parsePropertiesToObject(properties) {
   let property = {}; // [Property]
 
@@ -130,7 +142,6 @@ function parsePropertiesToObject(properties) {
     property[element[0]] = element[1];
     //console.log(`${element[0]}: ${element[1]}`);
   });
-  //console.log(property);
   return property;
 }
 /**
@@ -146,9 +157,7 @@ export function parseGraphToObject(response) {
 
   let edges = []; //[Edge]
   let edgesIndices = []; //[Integer]
-  let vertices = [];
-  let vertexIndices = []; //[Integer]
-
+  let verticesMap = new Map();
   graph.map(function (currResp) {
     //currResp = [(n1)-[r]->[n2]]
     currResp.map(function (currVertexEdge, index) {
@@ -158,26 +167,33 @@ export function parseGraphToObject(response) {
       let id = currVertexEdge[0][1];
       if (currVertexEdge[1][0] === "labels") {
         //Vertex
-        if (!vertexIndices.includes(id)) {
+        if (!verticesMap.has(id)) {
           //create new vertex
           let props = parsePropertiesToObject(currVertexEdge[2]);
 
           const vertex = new Vertex(id, currVertexEdge[1][1][0], props);
-          vertices.push(vertex);
-          vertexIndices.push(id);
+          verticesMap.set(id, vertex);
         }
       } else if (currVertexEdge[1][0] === "type") {
         //Edge
         //edge already exist? ->
         if (!edgesIndices.includes(id)) {
           let props = parsePropertiesToObject(currVertexEdge[4]);
+          let sourceNode = verticesMap.get(currVertexEdge[2][1]);
+          let destinationNode = verticesMap.get(currVertexEdge[3][1]);
           const edge = new Edge(
             id,
             currVertexEdge[1][1],
-            currVertexEdge[2][1],
-            currVertexEdge[3][1],
+            sourceNode.id,
+            destinationNode.id,
             props
           );
+          sourceNode.toVertices.push(destinationNode.id);
+          destinationNode.fromVertices.push(destinationNode.id);
+          verticesMap.delete(sourceNode.id);
+          verticesMap.delete(destinationNode.id);
+          verticesMap.set(sourceNode.id, sourceNode);
+          verticesMap.set(destinationNode.id, destinationNode);
           edges.push(edge);
           edgesIndices.push(id);
         }
@@ -186,11 +202,10 @@ export function parseGraphToObject(response) {
       }
     });
   });
+  let vertices = mapToArrayofObjects(verticesMap);
   return {
-    edgesIndices,
-    vertexIndices,
-    edges,
     vertices,
+    edges,
   };
 }
 
