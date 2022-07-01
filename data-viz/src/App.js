@@ -11,7 +11,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       displayModal: false,
-      displayInfoModal: true,
+      displayInfoModal: false,
       graphRedisStrings: null,
       selectedRedisGraphString: null,
       loadedGrapEntityJSON: null,
@@ -20,8 +20,9 @@ class App extends React.Component {
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleInfoModal = this.toggleInfoModal.bind(this);
-
     this.handleModalSubmit = this.handleModalSubmit.bind(this);
+    this.handleGraphEntityClicked = this.handleGraphEntityClicked.bind(this);
+    this.handleGraphEntityDeselect = this.handleGraphEntityDeselect.bind(this);
     this.fetchGraphIDs();
   }
   /**
@@ -32,6 +33,19 @@ class App extends React.Component {
   }
   toggleInfoModal() {
     this.setState({ displayInfoModal: !this.state.displayInfoModal });
+  }
+  handleGraphEntityClicked(isNode, id, icon) {
+    //get reference to corresponding node and store it in state
+    //get incoming, outgoing edges (from the redisData or the graphical node?)
+    //the icon does not need to be loaded from the graphical node, because normally we associate
+    //the icon with a nodeproperty outside the G6 class
+    //update the state so that the information Modal gets rerendered
+    console.log(isNode, id);
+    this.setState({ displayInfoModal: true, selectedNodeID: id });
+    //this.setState({ displayInfoModal: !this.state.displayInfoModal });
+  }
+  handleGraphEntityDeselect() {
+    this.setState({ displayInfoModal: false });
   }
   /**
    * Entrypoint of the website.
@@ -101,6 +115,7 @@ class App extends React.Component {
     }
     this.setState({
       displayModal: false,
+      displayInfoModal: false,
       selectedRedisGraphString: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
       renderG6GRaph: false,
     });
@@ -130,20 +145,26 @@ class App extends React.Component {
               jsonGraph={this.state.loadedGrapEntityJSON.graph}
               width={window.innerWidth}
               height={window.innerHeight - 80}
+              onEntitySelect={this.handleGraphEntityClicked}
+              onEntityDeselect={this.handleGraphEntityDeselect}
             />
           ) : null}
-          <InfoModal
-            title="Operation : Slice"
-            inEdges="100"
-            outEdges="2"
-            attributes={[
-              { id: "slice23" },
-              {
-                name: "Thisis he longes fucking ever name to test the scroll behaviour of the ul which will be fucing ennozing",
-              },
-            ]}
-            toggle={this.toggleInfoModal}
-          />
+          {this.state.displayInfoModal && (
+            <InfoModal
+              title="Operation : Slice"
+              icon="iconRef"
+              inEdges="100"
+              outEdges="2"
+              attributes={[
+                { id: this.state.selectedNodeID },
+                {
+                  name: "This is a very long attribute value to test the scrolling behaviour ouf the ul list element of the popup menu",
+                },
+              ]}
+              toggle={this.toggleInfoModal}
+            />
+          )}
+
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
         </main>
       </div>

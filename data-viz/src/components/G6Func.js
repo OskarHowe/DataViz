@@ -114,9 +114,6 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
 }
 
 export default function G6Func(props) {
-  console.log(`In G6Func:`);
-  console.log(props);
-  console.log(props.jsonGraph);
   console.log(convertGraphJSONtoG6Format(props.jsonGraph));
   const ref = React.useRef(null);
   let graph = null;
@@ -151,6 +148,14 @@ export default function G6Func(props) {
         },
       });
     }
+    const clearStates = () => {
+      graph.getNodes().forEach((node) => {
+        graph.clearItemStates(node);
+      });
+      graph.getEdges().forEach((edge) => {
+        graph.clearItemStates(edge);
+      });
+    };
 
     graph.data(convertGraphJSONtoG6Format(props.jsonGraph));
     graph.render();
@@ -158,6 +163,10 @@ export default function G6Func(props) {
     graph.on("node:mouseenter", (e) => {
       const nodeItem = e.item; // Get the target item
       graph.setItemState(nodeItem, "hover", true); // Set the state 'hover' of the item to be true
+    });
+    graph.on("canvas:click", (e) => {
+      clearStates();
+      props.onEntityDeselect();
     });
 
     // Mouse leave a node
@@ -167,15 +176,14 @@ export default function G6Func(props) {
     });
     // Click a node
     graph.on("node:click", (e) => {
-      // Swich the 'click' state of the node to be false
-      const clickNodes = graph.findAllByState("node", "click");
-      clickNodes.forEach((cn) => {
-        graph.setItemState(cn, "click", false);
-      });
-      console.log(`ClickEvenet: `);
-      console.log(e);
+      clearStates();
       const nodeItem = e.item; // et the clicked item
       graph.setItemState(nodeItem, "click", true); // Set the state 'click' of the item to be true
+
+      // Swich the 'click' state of the node to be false
+      const clickNodes = graph.findAllByState("node", "click");
+      console.log(clickNodes[0].getID());
+      props.onEntitySelect(true, clickNodes[0].getID()); //return the entity type (node/edge) the original node ID, and the reference to the selected icon
     });
   }, []);
 
