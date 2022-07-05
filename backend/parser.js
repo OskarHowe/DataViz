@@ -129,10 +129,12 @@ export function combineNodeEdgesResponse(responseEdges, responseNode) {
 //helper function because Map cant be serialized
 //https://stackoverflow.com/questions/29085197/how-do-you-json-stringify-an-es6-map
 function mapToArrayofObjects(map) {
-  let vertices = Array(map.size);
+  let vertices = [];
   map.forEach(function (value, key) {
-    vertices[key] = value;
+    vertices.push(value);
   });
+  console.log(map.size);
+  console.log(vertices);
   return vertices;
 }
 function parsePropertiesToObject(properties) {
@@ -184,16 +186,23 @@ export function parseGraphToObject(response) {
           const edge = new Edge(
             id,
             currVertexEdge[1][1],
-            sourceNode.id,
-            destinationNode.id,
+            currVertexEdge[2][1], //source node id
+            currVertexEdge[3][1], //destination node id
             props
           );
-          sourceNode.toVertices.push(destinationNode.id);
-          destinationNode.fromVertices.push(destinationNode.id);
-          verticesMap.delete(sourceNode.id);
-          verticesMap.delete(destinationNode.id);
-          verticesMap.set(sourceNode.id, sourceNode);
-          verticesMap.set(destinationNode.id, destinationNode);
+          //update adjecency list of sourcenode
+          if (sourceNode) {
+            //need to check because one node must not exist in the response but can be referenced as endpoint of an edge
+            sourceNode.toVertices.push(currVertexEdge[3][1]); //add destination node id
+            verticesMap.delete(sourceNode.id);
+            verticesMap.set(sourceNode.id, sourceNode);
+          }
+          //update adjecency list of destinationnode
+          if (destinationNode) {
+            destinationNode.fromVertices.push(currVertexEdge[2][1]); //add source node id
+            verticesMap.delete(destinationNode.id);
+            verticesMap.set(destinationNode.id, destinationNode);
+          }
           edges.push(edge);
           edgesIndices.push(id);
         }
