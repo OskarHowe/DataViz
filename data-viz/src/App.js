@@ -14,8 +14,16 @@ class App extends React.Component {
       displayInfoModal: false,
       graphRedisStrings: null,
       selectedRedisGraphString: null,
+      selectedNode: {
+        id: null,
+        label: null,
+        fromVertices: null,
+        toVertices: null,
+        params: null,
+      },
       loadedGrapEntityJSON: null,
       loading: true,
+      verticesMap: null,
       renderG6GRaph: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
@@ -40,8 +48,30 @@ class App extends React.Component {
     //the icon does not need to be loaded from the graphical node, because normally we associate
     //the icon with a nodeproperty outside the G6 class
     //update the state so that the information Modal gets rerendered
-    console.log(isNode, id);
-    this.setState({ displayInfoModal: true, selectedNodeID: id });
+    if (isNode) {
+      const selectedNode = this.state.verticesMap.get(id);
+      console.log("slectedNode: ");
+      console.log(selectedNode);
+      if (selectedNode) {
+        this.setState(
+          {
+            selectedNode: {
+              id: selectedNode.id,
+              label: selectedNode.labels,
+              fromVertices: selectedNode.fromVertices.length,
+              toVertices: selectedNode.toVertices.length,
+              params: selectedNode.properties,
+            },
+          },
+          () => {
+            console.log("slectedNodeState: ");
+            console.log(this.state.selectedNode);
+            this.setState({ displayInfoModal: true });
+          }
+        );
+      }
+    }
+
     //this.setState({ displayInfoModal: !this.state.displayInfoModal });
   }
   handleGraphEntityDeselect() {
@@ -156,16 +186,15 @@ class App extends React.Component {
           ) : null}
           {this.state.displayInfoModal && (
             <InfoModal
-              title="Operation : Slice"
+              title={
+                this.state.selectedNode.label +
+                " : id: " +
+                this.state.selectedNode.id
+              }
               icon="iconRef"
-              inEdges="100"
-              outEdges="2"
-              attributes={[
-                { id: this.state.selectedNodeID },
-                {
-                  name: "This is a very long attribute value to test the scrolling behaviour ouf the ul list element of the popup menu",
-                },
-              ]}
+              inEdges={this.state.selectedNode.fromVertices}
+              outEdges={this.state.selectedNode.toVertices}
+              attributes={this.state.selectedNode.params}
               toggle={this.toggleInfoModal}
             />
           )}

@@ -28,9 +28,8 @@ class InfoModal extends React.Component {
           </div>
           <hr />
           <ul>
-            {this.props.attributes.map((attribute) => {
-              let key = Object.keys(attribute).at(0);
-              let value = attribute[key];
+            {Object.keys(this.props.attributes).map((key) => {
+              let value = this.props.attributes[key];
 
               return (
                 <li key={key}>

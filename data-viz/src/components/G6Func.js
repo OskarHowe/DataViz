@@ -177,13 +177,14 @@ export default function G6Func(props) {
     // Click a node
     graph.on("node:click", (e) => {
       clearStates();
-      const nodeItem = e.item; // et the clicked item
+      const nodeItem = e.item; // e the clicked item
       graph.setItemState(nodeItem, "click", true); // Set the state 'click' of the item to be true
 
-      // Swich the 'click' state of the node to be false
       const clickNodes = graph.findAllByState("node", "click");
       console.log(clickNodes[0].getID());
-      props.onEntitySelect(true, clickNodes[0].getID()); //return the entity type (node/edge) the original node ID, and the reference to the selected icon
+      //retrieve ode from nodeIdString of format: "nodeID"
+      const origID = parseInt(clickNodes[0].getID().match(/(\d+)/)[0]);
+      props.onEntitySelect(true, origID); //return the entity type (node/edge) the original node ID, and the reference to the selected icon
     });
   }, []);
 
