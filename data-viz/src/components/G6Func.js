@@ -215,6 +215,7 @@ export default function G6Func(props) {
       });
     };
 
+    graph.setMaxZoom(2);
     graph.data(convertGraphJSONtoG6Format(props.jsonGraph));
     graph.render();
     // Mouse enter a node

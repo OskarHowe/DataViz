@@ -143,7 +143,10 @@ class App extends React.Component {
    * @param {*} graphRedisString
    */
   handleModalSubmit(graphRedisString, choosenLayout) {
-    if (graphRedisString === this.state.selectedRedisGraphString) {
+    if (
+      graphRedisString === this.state.selectedRedisGraphString &&
+      choosenLayout === this.state.layout
+    ) {
       this.setState({
         displayModal: false,
       });
