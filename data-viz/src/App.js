@@ -14,6 +14,7 @@ class App extends React.Component {
       displayInfoModal: false,
       graphRedisStrings: null,
       selectedRedisGraphString: null,
+      layout: null,
       selectedNode: {
         id: null,
         label: null,
@@ -141,7 +142,7 @@ class App extends React.Component {
    *
    * @param {*} graphRedisString
    */
-  handleModalSubmit(graphRedisString) {
+  handleModalSubmit(graphRedisString, choosenLayout) {
     if (graphRedisString === this.state.selectedRedisGraphString) {
       this.setState({
         displayModal: false,
@@ -152,6 +153,7 @@ class App extends React.Component {
       displayModal: false,
       displayInfoModal: false,
       selectedRedisGraphString: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
+      layout: choosenLayout,
       renderG6GRaph: false,
     });
     this.setState({ renderG6GRaph: false });
@@ -171,6 +173,13 @@ class App extends React.Component {
           <Modal
             toggle={this.toggleModal}
             remoteEntities={this.state.graphRedisStrings}
+            layouts={[
+              "gForce",
+              "Force_with_Clustering,",
+              "Dagre",
+              "Fruchterman",
+              "Grid",
+            ]}
             onSubmit={this.handleModalSubmit}
           />
         ) : null}
@@ -180,6 +189,7 @@ class App extends React.Component {
               jsonGraph={this.state.loadedGrapEntityJSON.graph}
               width={window.innerWidth}
               height={window.innerHeight - 80}
+              layout={this.state.layout}
               onEntitySelect={this.handleGraphEntityClicked}
               onEntityDeselect={this.handleGraphEntityDeselect}
             />

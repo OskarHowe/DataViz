@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import G6 from "@antv/g6";
 import icons from "../images/iconsBase64";
@@ -13,6 +13,7 @@ const graphicsColors = [
   "#9661BC", //purple
   "#F6903D", //orange
 ];
+
 function getAttributeCombinationOnTheFly(
   attributeArray,
   elementClass,
@@ -114,38 +115,95 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
 }
 
 export default function G6Func(props) {
-  console.log(convertGraphJSONtoG6Format(props.jsonGraph));
+  //console.log(convertGraphJSONtoG6Format(props.jsonGraph));
   const ref = React.useRef(null);
   let graph = null;
+  const layouts = new Map();
 
   useEffect(() => {
+    layouts.set("gForce", {
+      type: "gForce",
+      center: [
+        ref.current.parentElement.offsetWidth / 2,
+        ref.current.parentElement.offsetHeight / 2,
+      ], // The center of the graph by default
+      linkDistance: 1,
+      nodeStrength: 1000,
+      preventOverlap: true,
+
+      edgeStrength: 200,
+      onTick: () => {
+        console.log("ticking");
+      },
+      onLayoutEnd: () => {
+        console.log("force layout done");
+      },
+      workerEnabled: true, // Whether to activate web-worker
+      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
+      // more options are shown below
+    });
+    layouts.set("Force_with_Clustering", {
+      type: "force",
+      clustering: true,
+      clusterNodeStrength: -5,
+      clusterEdgeDistance: 200,
+      clusterNodeSize: 20,
+      clusterFociStrength: 1.2,
+      nodeSpacing: 5,
+      workerEnabled: true, // Whether to activate web-worker
+      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
+      preventOverlap: true,
+    });
+    layouts.set("Dagre", {
+      type: "dagre",
+      nodesepFunc: (d) => {
+        if (d.id === "3") {
+          return 500;
+        }
+        return 50;
+      },
+      ranksep: 70,
+      preventOverlap: true,
+
+      controlPoints: true,
+      workerEnabled: true, // Whether to activate web-worker
+      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
+    });
+    layouts.set("Fruchterman", {
+      type: "fruchterman",
+      maxIteration: 8000,
+      gravity: 1,
+      preventOverlap: true,
+
+      workerEnabled: true, // Whether to activate web-worker
+      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
+    });
+    layouts.set("Grid", {
+      type: "grid",
+      begin: [20, 20],
+      width: ref.current.parentElement.offsetWidth - 20,
+      height: ref.current.parentElement.offsetHeight - 20,
+    });
     if (!graph) {
       graph = new G6.Graph({
         container: ReactDOM.findDOMNode(ref.current),
         width: ref.current.parentElement.offsetWidth,
         height: ref.current.parentElement.offsetHeight,
         modes: {
-          default: ["drag-canvas", "zoom-canvas", "drag-node"], // Allow users to drag canvas, zoom canvas, and drag nodes
+          default: [
+            "drag-node",
+            {
+              type: "drag-canvas",
+              enableOptimize: true, // enable the optimize to hide the shapes beside nodes' keyShape
+            },
+            {
+              type: "zoom-canvas",
+              enableOptimize: true, // enable the optimize to hide the shapes beside nodes' keyShape
+            },
+          ],
         },
-        layout: {
-          type: "gForce",
-          center: [
-            ref.current.parentElement.offsetWidth / 2,
-            ref.current.parentElement.offsetHeight / 2,
-          ], // The center of the graph by default
-          linkDistance: 1,
-          nodeStrength: 1000,
-          edgeStrength: 200,
-          onTick: () => {
-            console.log("ticking");
-          },
-          onLayoutEnd: () => {
-            console.log("force layout done");
-          },
-          workerEnabled: true, // Whether to activate web-worker
-          gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
-          // more options are shown below
-        },
+        layout: layouts.get(props.layout),
+        fitCenter: true,
       });
     }
     const clearStates = () => {
@@ -181,6 +239,10 @@ export default function G6Func(props) {
       graph.setItemState(nodeItem, "click", true); // Set the state 'click' of the item to be true
 
       const clickNodes = graph.findAllByState("node", "click");
+      graph.focusItem(nodeItem, true, {
+        easing: "easeCubic",
+        duration: 400,
+      });
       console.log(clickNodes[0].getID());
       //retrieve ode from nodeIdString of format: "nodeID"
       const origID = parseInt(clickNodes[0].getID().match(/(\d+)/)[0]);
