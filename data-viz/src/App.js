@@ -5,6 +5,7 @@ import "./App.css";
 import BlueButton from "./components/BlueButton";
 import InfoModal from "./components/InfoModal";
 import G6Func from "./components/G6Func";
+import CytoViz from "./components/CytoViz";
 
 class App extends React.Component {
   constructor(props) {
@@ -207,13 +208,19 @@ class App extends React.Component {
         ) : null}
         <main className="graph-node">
           {this.state.displayG6Graph ? (
-            <G6Func
+            // <G6Func
+            //   jsonGraph={this.state.loadedGrapEntityJSON.graph}
+            //   width={window.innerWidth}
+            //   height={window.innerHeight - 200}
+            //   layout={this.state.layout}
+            //   onEntitySelect={this.handleGraphEntityClicked}
+            //   onEntityDeselect={this.handleGraphEntityDeselect}
+            // />
+            <CytoViz
               jsonGraph={this.state.loadedGrapEntityJSON.graph}
               width={window.innerWidth}
               height={window.innerHeight - 200}
               layout={this.state.layout}
-              onEntitySelect={this.handleGraphEntityClicked}
-              onEntityDeselect={this.handleGraphEntityDeselect}
             />
           ) : null}
 
@@ -232,13 +239,13 @@ class App extends React.Component {
           />
 
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
-          <BlueButton
+          {/* <BlueButton
             id="hideEdgesBtn"
             text="Toggle Edges"
             onClick={() => {
               console.log("Toggle Edges!");
             }}
-          />
+          /> */}
         </main>
       </div>
     );
