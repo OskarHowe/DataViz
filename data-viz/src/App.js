@@ -216,20 +216,20 @@ class App extends React.Component {
               onEntityDeselect={this.handleGraphEntityDeselect}
             />
           ) : null}
-          {this.state.displayInfoModal && (
-            <InfoModal
-              title={
-                this.state.selectedNode.label +
-                " : id: " +
-                this.state.selectedNode.id
-              }
-              icon="iconRef"
-              inEdges={this.state.selectedNode.fromVertices}
-              outEdges={this.state.selectedNode.toVertices}
-              attributes={this.state.selectedNode.params}
-              toggle={this.toggleInfoModal}
-            />
-          )}
+
+          <InfoModal
+            title={
+              this.state.selectedNode.label +
+              " : id: " +
+              this.state.selectedNode.id
+            }
+            visible={this.state.displayInfoModal}
+            icon="iconRef"
+            inEdges={this.state.selectedNode.fromVertices}
+            outEdges={this.state.selectedNode.toVertices}
+            attributes={this.state.selectedNode.params}
+            toggle={this.toggleInfoModal}
+          />
 
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
         </main>

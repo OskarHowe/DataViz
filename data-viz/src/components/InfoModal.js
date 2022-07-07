@@ -10,7 +10,14 @@ class InfoModal extends React.Component {
   render() {
     return (
       <Draggable>
-        <div className="InfoModal">
+        <div
+          className="InfoModal"
+          style={
+            this.props.visible
+              ? { visibility: "visible" }
+              : { visibility: "hidden" }
+          }
+        >
           <CloseButton onClick={this.props.toggle} />
           <div className="header-infomodal">
             <img src={this.props.iconRef} alt="Logo" />
@@ -28,15 +35,16 @@ class InfoModal extends React.Component {
           </div>
           <hr />
           <ul>
-            {Object.keys(this.props.attributes).map((key) => {
-              let value = this.props.attributes[key];
+            {this.props.attributes &&
+              Object.keys(this.props.attributes).map((key) => {
+                let value = this.props.attributes[key];
 
-              return (
-                <li key={key}>
-                  {key} :<p>{value}</p>
-                </li>
-              );
-            })}
+                return (
+                  <li key={key}>
+                    {key} :<p>{value}</p>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </Draggable>
