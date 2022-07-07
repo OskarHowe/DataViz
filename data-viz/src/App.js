@@ -25,7 +25,7 @@ class App extends React.Component {
       loadedGrapEntityJSON: null,
       loading: true,
       verticesMap: null,
-      renderG6GRaph: false,
+      displayG6Graph: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleInfoModal = this.toggleInfoModal.bind(this);
@@ -121,8 +121,8 @@ class App extends React.Component {
       .then((json) => {
         const endTime = window.performance.now();
         json.measures.push({ nodeFetchDuration: endTime - startTime });
-        console.log(`Fetched ${graphId} from server`);
-        console.log(json);
+        //console.log(`Fetched ${graphId} from server`);
+        //console.log(json);
         let verticesMap = new Map();
         json.graph.vertices.map((value) => {
           verticesMap.set(value.id, value);
@@ -131,7 +131,7 @@ class App extends React.Component {
         this.setState({ verticesMap: verticesMap });
       })
       .then(() => {
-        this.setState({ renderG6GRaph: true });
+        this.setState({ displayG6Graph: true });
       })
       .catch((error) => {
         console.log(`Error when fetching Graphentity: ${error}`);
@@ -147,19 +147,38 @@ class App extends React.Component {
       graphRedisString === this.state.selectedRedisGraphString &&
       choosenLayout === this.state.layout
     ) {
+      //console.log("graph and layout same");
+      //everything stayed the same
       this.setState({
         displayModal: false,
       });
       return;
+    } else if (graphRedisString === this.state.selectedRedisGraphString) {
+      //just the layout changed
+      //console.log("graph same and layout changed");
+
+      this.setState(
+        {
+          displayModal: false,
+          displayInfoModal: false,
+          layout: choosenLayout,
+          displayG6Graph: false,
+        },
+        () => {
+          this.setState({ displayG6Graph: true });
+        }
+      );
+      return;
     }
+    //console.log("graph changed");
+    //fetch an other graph entity
     this.setState({
       displayModal: false,
       displayInfoModal: false,
       selectedRedisGraphString: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
       layout: choosenLayout,
-      renderG6GRaph: false,
+      displayG6Graph: false,
     });
-    this.setState({ renderG6GRaph: false });
     this.fetchGraphEntity(graphRedisString);
   }
   render() {
@@ -187,7 +206,7 @@ class App extends React.Component {
           />
         ) : null}
         <main className="graph-node">
-          {this.state.renderG6GRaph ? (
+          {this.state.displayG6Graph ? (
             <G6Func
               jsonGraph={this.state.loadedGrapEntityJSON.graph}
               width={window.innerWidth}

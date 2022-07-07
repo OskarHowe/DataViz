@@ -164,7 +164,6 @@ export default function G6Func(props) {
       },
       ranksep: 70,
       preventOverlap: true,
-
       controlPoints: true,
       workerEnabled: true, // Whether to activate web-worker
       gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
