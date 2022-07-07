@@ -210,7 +210,7 @@ class App extends React.Component {
             <G6Func
               jsonGraph={this.state.loadedGrapEntityJSON.graph}
               width={window.innerWidth}
-              height={window.innerHeight - 80}
+              height={window.innerHeight - 200}
               layout={this.state.layout}
               onEntitySelect={this.handleGraphEntityClicked}
               onEntityDeselect={this.handleGraphEntityDeselect}
@@ -232,6 +232,13 @@ class App extends React.Component {
           />
 
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
+          <BlueButton
+            id="hideEdgesBtn"
+            text="Toggle Edges"
+            onClick={() => {
+              console.log("Toggle Edges!");
+            }}
+          />
         </main>
       </div>
     );

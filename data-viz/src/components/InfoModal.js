@@ -1,7 +1,6 @@
 import React from "react";
 import "./InfoModal.css";
 import CloseButton from "./CloseButton";
-import gearsIcon from "../images/Gears_White.png";
 import arrowIn from "../images/Arrow In.png";
 import arrowOut from "../images/Arrow Out.png";
 import Draggable from "react-draggable";
