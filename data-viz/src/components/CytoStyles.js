@@ -1,5 +1,3 @@
-import { SocialDistance } from "@mui/icons-material";
-
 const nodeStyle = {
   selector: "node",
   style: {
