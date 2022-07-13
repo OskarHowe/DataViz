@@ -1,7 +1,7 @@
 import React from "react";
 //import cytoscape from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
-import { nodeStyle, edgeStyle } from "./CytoStyles";
+import { createNodeStyle, edgeStyle } from "./CytoStyles";
 import dagre from "cytoscape-dagre";
 import cytoscape from "cytoscape";
 
@@ -10,7 +10,7 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
   grapJsonObj.vertices.forEach((node) => {
     elements.push({
       group: "nodes",
-      classes: node.type,
+      classes: node.labels,
       data: {
         id: "node" + node.id,
         label: node.labels,
@@ -35,6 +35,9 @@ const CytoFunc = (props) => {
   const graphData = CytoscapeComponent.normalizeElements(
     convertGraphJSONtoCytoFormat(props.jsonGraph)
   );
+  let nodeStylesheet = createNodeStyle(props.jsonGraph.vertices);
+  nodeStylesheet.style.push(edgeStyle);
+  console.log(nodeStylesheet);
   return (
     <CytoscapeComponent
       elements={graphData}
@@ -42,7 +45,7 @@ const CytoFunc = (props) => {
       layout={{
         name: "dagre",
       }}
-      stylesheet={[nodeStyle, edgeStyle]}
+      stylesheet={nodeStylesheet.style}
       minZoom={0.2}
       maxZoom={2}
     />
