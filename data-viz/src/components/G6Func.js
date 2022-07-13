@@ -1,6 +1,15 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import G6, { Algorithm } from "@antv/g6";
+import {
+  createg6Vertex,
+  createg6Edge,
+  gForce,
+  forceWithClustering,
+  dagre,
+  fruchterman,
+  grid,
+} from "./G6Styles.js";
 import "./G6Func.css";
 import icons from "../images/iconsBase64";
 const { louvain } = Algorithm;
@@ -58,79 +67,11 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
       node.labels,
       usedIconsMap
     );
-
-    const g6Vertex = {
-      id: "node" + node.id,
-      comboId: node.labels === theLabel ? "comboC" : "", // node1 belongs to comboA
-      label: node.labels,
-      labelCfg: {
-        position: "bottom",
-        offset: 5,
-        style: {
-          fill: "#ebebeb",
-          // fontFamily: ["Source Sans Pro", "sans-serif"],
-        },
-      },
-      class: node.labels,
-      size: 40,
-      style: {
-        fill: color,
-        opacity: 0.2,
-        stroke: color,
-        strokeOpacity: 0.85,
-      },
-      icon: {
-        show: true,
-        width: 30,
-        height: 30,
-        img: icon,
-      },
-      stateStyles: {
-        // The node style when the state 'hover' is true
-        hover: {
-          opacity: 0.4,
-        },
-        // The node style when the state 'click' is true
-        click: {
-          stroke: "#fff",
-          lineWidth: 3,
-        },
-      },
-    };
+    const g6Vertex = createg6Vertex(node, color, icon);
     g6Graph.nodes.push(g6Vertex);
   });
   grapJsonObj.edges.forEach((edge) => {
-    const g6Edge = {
-      //label: edge.type, // String[]
-      source: "node" + edge.sourceNode, // Integer
-      target: "node" + edge.destinationNode, // Integer
-      type: "quadratic",
-      style: {
-        opacity: 0.3, // The opacity of edges
-        stroke: "#4c4f52", // The color of the edges
-        endArrow: true,
-        lineWidth: 6,
-      },
-      labelCfg: {
-        autoRotate: true, // Whether to rotate the label according to the edges
-      },
-      stateStyles: {
-        // The node style when the state 'click' is true
-        selected: {
-          opacity: 0.8, // The opacity of edges
-          stroke: "#ffffff", // The color of the edges
-          endArrow: true,
-          lineWidth: 7,
-        },
-        clicked: {
-          opacity: 0.8, // The opacity of edges
-          stroke: "#ffffff", // The color of the edges
-          endArrow: true,
-          lineWidth: 7,
-          lineDash: [10],
-        },
-      },
-    };
+    const g6Edge = createg6Edge(edge);
     g6Graph.edges.push(g6Edge);
   });
   return g6Graph;
@@ -156,68 +97,11 @@ export default function G6Func(props) {
   const layouts = new Map();
 
   useEffect(() => {
-    layouts.set("gForce", {
-      type: "gForce",
-      center: [
-        ref.current.parentElement.offsetWidth / 2,
-        ref.current.parentElement.offsetHeight / 2,
-      ], // The center of the graph by default
-      linkDistance: 1,
-      nodeStrength: 1000,
-      preventOverlap: true,
-
-      edgeStrength: 200,
-      onTick: () => {
-        console.log("ticking");
-      },
-      onLayoutEnd: () => {
-        console.log("force layout done");
-      },
-      workerEnabled: true, // Whether to activate web-worker
-      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
-      // more options are shown below
-    });
-    layouts.set("Force_with_Clustering", {
-      type: "force",
-      clustering: true,
-      clusterNodeStrength: -5,
-      clusterEdgeDistance: 200,
-      clusterNodeSize: 20,
-      clusterFociStrength: 1.2,
-      nodeSpacing: 5,
-      workerEnabled: true, // Whether to activate web-worker
-      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
-      preventOverlap: true,
-    });
-    layouts.set("Dagre", {
-      type: "dagre",
-      nodesepFunc: (d) => {
-        if (d.id === "3") {
-          return 500;
-        }
-        return 50;
-      },
-      ranksep: 70,
-      preventOverlap: true,
-      controlPoints: true,
-      workerEnabled: true, // Whether to activate web-worker
-      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
-    });
-    layouts.set("Fruchterman", {
-      type: "fruchterman",
-      maxIteration: 8000,
-      gravity: 1,
-      preventOverlap: true,
-
-      workerEnabled: true, // Whether to activate web-worker
-      gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
-    });
-    layouts.set("Grid", {
-      type: "grid",
-      begin: [20, 20],
-      width: ref.current.parentElement.offsetWidth - 20,
-      height: ref.current.parentElement.offsetHeight - 20,
-    });
+    layouts.set("gForce", gForce(ref));
+    layouts.set("Force_with_Clustering", forceWithClustering);
+    layouts.set("Dagre", dagre);
+    layouts.set("Fruchterman", fruchterman);
+    layouts.set("Grid", grid(ref));
     const minimap = new G6.Minimap({
       size: [150, 100],
     });
@@ -280,6 +164,8 @@ export default function G6Func(props) {
           padding: 10,
           style: {
             fill: color,
+            opacity: 0,
+            strokeOpacity: 0.85,
             stroke: "white",
           },
         });
