@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import G6 from "@antv/g6";
+import G6, { Algorithm } from "@antv/g6";
 import "./G6Func.css";
 import icons from "../images/iconsBase64";
+const { louvain } = Algorithm;
 const graphicsColors = [
   "#5F95FF", // blue
   "#61DDAA", //green
@@ -14,7 +15,6 @@ const graphicsColors = [
   "#9661BC", //purple
   "#F6903D", //orange
 ];
-const combos = ["comboA", "comboB", "comboC", ""];
 
 function getAttributeCombinationOnTheFly(
   attributeArray,
@@ -46,7 +46,6 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
   };
   let usedAttributesMap = new Map();
   let usedIconsMap = new Map();
-  let usedCombosMap = new Map();
   const theLabel = grapJsonObj.vertices.at(0).labels;
   grapJsonObj.vertices.forEach((node) => {
     let color = getAttributeCombinationOnTheFly(
@@ -59,11 +58,6 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
       node.labels,
       usedIconsMap
     );
-    // let combo = getAttributeCombinationOnTheFly(
-    //   combos,
-    //   node.labels,
-    //   usedCombosMap
-    // );
 
     const g6Vertex = {
       id: "node" + node.id,
@@ -139,10 +133,6 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
     };
     g6Graph.edges.push(g6Edge);
   });
-  g6Graph.combos.push({
-    id: "comboC",
-    label: "C",
-  });
   return g6Graph;
 }
 
@@ -152,6 +142,7 @@ export default function G6Func(props) {
   let graph = null;
   let minimap = null;
   let displayEdges = true;
+  const clusterBtn = document.getElementById("clusterBtn");
   const hideEdgesBtn = document.getElementById("hideEdgesBtn");
   hideEdgesBtn.addEventListener("click", () => {
     let edges = graph.getEdges();
@@ -160,6 +151,7 @@ export default function G6Func(props) {
       displayEdges ? graph.showItem(edge, false) : graph.hideItem(edge, false);
     });
   });
+
   let zommedOutMode = false;
   const layouts = new Map();
 
@@ -273,8 +265,27 @@ export default function G6Func(props) {
     };
 
     graph.setMaxZoom(2);
-    graph.data(convertGraphJSONtoG6Format(props.jsonGraph));
+    const data = convertGraphJSONtoG6Format(props.jsonGraph);
+    graph.data(data);
     graph.render();
+    clusterBtn.addEventListener("click", (e) => {
+      const clusteredData = louvain(data, false);
+
+      clusteredData.clusters.forEach((cluster, i) => {
+        console.log(cluster);
+        const color = graphicsColors[i % graphicsColors.length];
+        graph.createHull({
+          id: `hull${i}`,
+          members: cluster.nodes.map((node) => node.id),
+          padding: 10,
+          style: {
+            fill: color,
+            stroke: "white",
+          },
+        });
+      });
+      graph.refresh();
+    });
     graph.on("viewportchange", (evt) => {
       // some operations
       if (evt.action === "zoom") {

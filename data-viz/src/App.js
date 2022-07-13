@@ -239,6 +239,13 @@ class App extends React.Component {
               console.log("Toggle Edges!");
             }}
           />
+          <BlueButton
+            id="clusterBtn"
+            text="Find Clusters"
+            onClick={() => {
+              console.log("Louvain applied!");
+            }}
+          />
         </main>
       </div>
     );

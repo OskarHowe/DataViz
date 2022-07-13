@@ -48,7 +48,16 @@
   height: auto;
   position: fixed;
   bottom: 0.5em;
-  left: 5em;
+  left: 3em;
+  z-index: 200;
+}
+#clusterBtn {
+  border-radius: 5px;
+  width: auto;
+  height: auto;
+  position: fixed;
+  bottom: 0.5em;
+  left: 9em;
   z-index: 200;
 }
 .graph-node {
