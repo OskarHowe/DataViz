@@ -5,7 +5,7 @@ import "./App.css";
 import BlueButton from "./components/BlueButton";
 import InfoModal from "./components/InfoModal";
 import G6Func from "./components/G6Func";
-import CytoViz from "./components/CytoViz";
+import CytoFunc from "./components/CytoFunc";
 
 class App extends React.Component {
   constructor(props) {
@@ -216,7 +216,7 @@ class App extends React.Component {
             //   onEntitySelect={this.handleGraphEntityClicked}
             //   onEntityDeselect={this.handleGraphEntityDeselect}
             // />
-            <CytoViz
+            <CytoFunc
               jsonGraph={this.state.loadedGrapEntityJSON.graph}
               width={window.innerWidth}
               height={window.innerHeight - 200}
