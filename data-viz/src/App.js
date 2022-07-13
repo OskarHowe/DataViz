@@ -239,13 +239,20 @@ class App extends React.Component {
           />
 
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
-          {/* <BlueButton
+          <BlueButton
             id="hideEdgesBtn"
             text="Toggle Edges"
             onClick={() => {
               console.log("Toggle Edges!");
             }}
-          /> */}
+          />
+          <BlueButton
+            id="clusterBtn"
+            text="Find Clusters"
+            onClick={() => {
+              console.log("Louvain applied!");
+            }}
+          />
         </main>
       </div>
     );

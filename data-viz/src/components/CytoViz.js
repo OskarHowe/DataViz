@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useRef } from "react";
-import cytoscape from "cytoscape";
+import React, { useEffect, useRef } from "react";
+import CytoscapeComponent from "react-cytoscape";
 
 function convertGraphJSONtoCytoFormat(grapJsonObj) {
   let elements = {
@@ -24,24 +24,31 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
   return elements;
 }
 const CytoViz = (props) => {
-  const graphRef = useRef(null);
-
-  const drawGraph = () => {
-    const elements = convertGraphJSONtoCytoFormat(props.jsonGraph);
-    const cy = cytoscape({
-      container: graphRef.current,
-      elements: elements,
-    });
-  };
-
-  useEffect(() => {
-    drawGraph();
-  }, []);
+  const graphData = convertGraphJSONtoCytoFormat(props.jsonGraph);
 
   return (
-    <Fragment>
-      <div ref={graphRef} style={{ width: "100%", height: "80vh" }}></div>
-    </Fragment>
+    <CytoscapeComponent
+      elements={CytoscapeComponent.normalizeElements(graphData)}
+      style={{ width: "1080px", height: "1800px" }}
+      zoomingEnabled={true}
+      maxZoom={3}
+      minZoom={0.1}
+      //autounselectify={false}
+      //boxSelectionEnabled={true}
+      //layout={layout}
+      //stylesheet={styleSheet}
+      cy={(cy) => {
+        myCyRef = cy;
+
+        // cy.on("tap", "node", (evt) => {
+        //   var node = evt.target;
+        //   console.log("EVT", evt);
+        //   console.log("TARGET", node.data());
+        //   console.log("TARGET TYPE", typeof node[0]);
+        // });
+      }}
+      abc={console.log("myCyRef", myCyRef)}
+    />
   );
 };
 export default CytoViz;
