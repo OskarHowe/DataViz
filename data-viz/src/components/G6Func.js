@@ -55,7 +55,6 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
   };
   let usedAttributesMap = new Map();
   let usedIconsMap = new Map();
-  const theLabel = grapJsonObj.vertices.at(0).labels;
   grapJsonObj.vertices.forEach((node) => {
     let color = getAttributeCombinationOnTheFly(
       graphicsColors,
@@ -81,7 +80,6 @@ export default function G6Func(props) {
   //console.log(convertGraphJSONtoG6Format(props.jsonGraph));
   const ref = React.useRef(null);
   let graph = null;
-  let minimap = null;
   let displayEdges = true;
   const clusterBtn = document.getElementById("clusterBtn");
   const hideEdgesBtn = document.getElementById("hideEdgesBtn");
