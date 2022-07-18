@@ -16,6 +16,7 @@ class App extends React.Component {
       graphRedisStrings: null,
       selectedRedisGraphString: null,
       layout: null,
+      visualizationLib: null,
       selectedNode: {
         id: null,
         label: null,
@@ -23,10 +24,26 @@ class App extends React.Component {
         toVertices: null,
         params: null,
       },
+      visLibs: [
+        {
+          id: "Cytoscape",
+          layouts: ["dagre"],
+        },
+        {
+          id: "G6",
+          layouts: [
+            "gForce",
+            "Force_with_Clustering,",
+            "Dagre",
+            "Fruchterman",
+            "Grid",
+          ],
+        },
+      ],
       loadedGrapEntityJSON: null,
       loading: true,
       verticesMap: null,
-      displayG6Graph: false,
+      displayGraph: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleInfoModal = this.toggleInfoModal.bind(this);
@@ -132,7 +149,7 @@ class App extends React.Component {
         this.setState({ verticesMap: verticesMap });
       })
       .then(() => {
-        this.setState({ displayG6Graph: true });
+        this.setState({ displayGraph: true });
       })
       .catch((error) => {
         console.log(`Error when fetching Graphentity: ${error}`);
@@ -143,10 +160,11 @@ class App extends React.Component {
    *
    * @param {*} graphRedisString
    */
-  handleModalSubmit(graphRedisString, choosenLayout) {
+  handleModalSubmit(graphRedisString, choosenLayout, choosenLib) {
     if (
       graphRedisString === this.state.selectedRedisGraphString &&
-      choosenLayout === this.state.layout
+      choosenLayout === this.state.layout &&
+      choosenLib === this.state.visualizationLib
     ) {
       //console.log("graph and layout same");
       //everything stayed the same
@@ -163,10 +181,11 @@ class App extends React.Component {
           displayModal: false,
           displayInfoModal: false,
           layout: choosenLayout,
-          displayG6Graph: false,
+          visualizationLib: choosenLib,
+          displayGraph: false,
         },
         () => {
-          this.setState({ displayG6Graph: true });
+          this.setState({ displayGraph: true });
         }
       );
       return;
@@ -178,7 +197,8 @@ class App extends React.Component {
       displayInfoModal: false,
       selectedRedisGraphString: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
       layout: choosenLayout,
-      displayG6Graph: false,
+      visualizationLib: choosenLib,
+      displayGraph: false,
     });
     this.fetchGraphEntity(graphRedisString);
   }
@@ -196,18 +216,12 @@ class App extends React.Component {
           <Modal
             toggle={this.toggleModal}
             remoteEntities={this.state.graphRedisStrings}
-            layouts={[
-              "gForce",
-              "Force_with_Clustering,",
-              "Dagre",
-              "Fruchterman",
-              "Grid",
-            ]}
+            visLibs={this.state.visLibs}
             onSubmit={this.handleModalSubmit}
           />
         ) : null}
         <main className="graph-node">
-          {this.state.displayG6Graph ? (
+          {this.state.displayGraph ? (
             // <G6Func
             //   jsonGraph={this.state.loadedGrapEntityJSON.graph}
             //   width={window.innerWidth}

@@ -9,13 +9,16 @@ class Modal extends React.Component {
     super(props);
     this.state = {
       remoteEntities: props.remoteEntities,
-      layouts: props.layouts,
+      layouts: null,
       selectedGraph: null,
       selectedLayout: null,
+      selectedLib: null,
+      visLibs: props.visLibs,
     };
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleLayoutSelectChange = this.handleLayoutSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleLibSelectChange = this.handleLibSelectChange.bind(this);
   }
   handleSelectChange(selectedOption) {
     this.setState({ selectedGraph: selectedOption });
@@ -23,10 +26,24 @@ class Modal extends React.Component {
   handleLayoutSelectChange(selectedOption) {
     this.setState({ selectedLayout: selectedOption });
   }
+  handleLibSelectChange(selectedOption) {
+    const lib = this.state.visLibs.find((lib) => lib.id === selectedOption);
+    console.log(lib);
+    this.setState({
+      selectedLib: selectedOption,
+      layouts: lib.layouts,
+      //load layout array from Object  with id = selected option into state.layouts
+    });
+  }
   handleSubmit() {
-    this.props.onSubmit(this.state.selectedGraph, this.state.selectedLayout);
+    this.props.onSubmit(
+      this.state.selectedGraph,
+      this.state.selectedLayout,
+      this.state.selectedLib
+    );
   }
   render() {
+    const libs = this.state.visLibs.map((lib) => lib.id);
     return (
       <div className="ModalWrapper">
         <div className="Modal">
@@ -42,12 +59,21 @@ class Modal extends React.Component {
               onChange={this.handleSelectChange}
             />
             <div className="settingsElement-text">
-              <h4>Choose a Layout</h4>
+              <h4>Choose a the visualization Library</h4>
             </div>
             <SelectSimple
-              options={this.state.layouts}
-              onChange={this.handleLayoutSelectChange}
+              options={libs}
+              onChange={this.handleLibSelectChange}
             />
+            <div className="settingsElement-text">
+              <h4>Choose a Layout</h4>
+            </div>
+            {this.state.layouts && (
+              <SelectSimple
+                options={this.state.layouts}
+                onChange={this.handleLayoutSelectChange}
+              />
+            )}
             <div></div>
             <BlueButton
               id="visualizeBtn"
