@@ -39,6 +39,8 @@ const CytoFunc = (props) => {
     case "cola":
       cytoscape.use(cola); // register extension
       break;
+    case "grid":
+      break;
     default:
       cytoscape.use(dagre);
       props.layout = "dagre";
