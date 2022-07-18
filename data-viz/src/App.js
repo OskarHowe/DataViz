@@ -167,7 +167,6 @@ class App extends React.Component {
       choosenLib === this.state.visualizationLib
     ) {
       //console.log("graph and layout same");
-      //everything stayed the same
       this.setState({
         displayModal: false,
       });
@@ -221,22 +220,25 @@ class App extends React.Component {
           />
         ) : null}
         <main className="graph-node">
-          {this.state.displayGraph ? (
-            // <G6Func
-            //   jsonGraph={this.state.loadedGrapEntityJSON.graph}
-            //   width={window.innerWidth}
-            //   height={window.innerHeight - 200}
-            //   layout={this.state.layout}
-            //   onEntitySelect={this.handleGraphEntityClicked}
-            //   onEntityDeselect={this.handleGraphEntityDeselect}
-            // />
-            <CytoFunc
-              jsonGraph={this.state.loadedGrapEntityJSON.graph}
-              width={window.innerWidth}
-              height={window.innerHeight - 200}
-              layout={this.state.layout}
-            />
-          ) : null}
+          {this.state.displayGraph &&
+            ((this.state.visualizationLib === "G6" && (
+              <G6Func
+                jsonGraph={this.state.loadedGrapEntityJSON.graph}
+                width={window.innerWidth}
+                height={window.innerHeight - 200}
+                layout={this.state.layout}
+                onEntitySelect={this.handleGraphEntityClicked}
+                onEntityDeselect={this.handleGraphEntityDeselect}
+              />
+            )) ||
+              (this.state.visualizationLib === "Cytoscape" && (
+                <CytoFunc
+                  jsonGraph={this.state.loadedGrapEntityJSON.graph}
+                  width={window.innerWidth}
+                  height={window.innerHeight}
+                  layout={this.state.layout}
+                />
+              )))}
 
           <InfoModal
             title={
@@ -253,20 +255,24 @@ class App extends React.Component {
           />
 
           <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
-          <BlueButton
-            id="hideEdgesBtn"
-            text="Toggle Edges"
-            onClick={() => {
-              console.log("Toggle Edges!");
-            }}
-          />
-          <BlueButton
-            id="clusterBtn"
-            text="Find Clusters"
-            onClick={() => {
-              console.log("Louvain applied!");
-            }}
-          />
+          {this.state.visualizationLib === "G6" && (
+            <BlueButton
+              id="hideEdgesBtn"
+              text="Toggle Edges"
+              onClick={() => {
+                console.log("Toggle Edges!");
+              }}
+            />
+          )}
+          {this.state.visualizationLib === "G6" && (
+            <BlueButton
+              id="clusterBtn"
+              text="Find Clusters"
+              onClick={() => {
+                console.log("Louvain applied!");
+              }}
+            />
+          )}
         </main>
       </div>
     );

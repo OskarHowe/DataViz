@@ -52,21 +52,30 @@ class Modal extends React.Component {
           <hr />
           <div className="settingsElement">
             <div className="settingsElement-text">
-              <h4>Choose a Graph Entity from our Database</h4>
+              <h4>Graph entity to download from our database</h4>
+              <p>
+                All graph entities which are stored on the local redis server
+                are listed and can be fetched
+              </p>
             </div>
             <SelectSimple
               options={this.state.remoteEntities}
               onChange={this.handleSelectChange}
             />
             <div className="settingsElement-text">
-              <h4>Choose a the visualization Library</h4>
+              <h4>Choose the visualization Library</h4>
+              <p>To compare different libaries directly</p>
             </div>
             <SelectSimple
               options={libs}
               onChange={this.handleLibSelectChange}
             />
             <div className="settingsElement-text">
-              <h4>Choose a Layout</h4>
+              <h4>Apply a Layout</h4>
+              <p>
+                The layout can have a drastic impact on the performance. Try to
+                choose an layout that fits the structure of the graph.
+              </p>
             </div>
             {this.state.layouts && (
               <SelectSimple

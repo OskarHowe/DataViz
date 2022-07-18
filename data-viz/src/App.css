@@ -1,11 +1,11 @@
 .App {
-  /* text-align: center; */
   overflow: hidden;
 }
 
 .App-header {
   background-color: #292f33;
-  height: 8vh;
+  height: 90px;
+  width: 100%;
   color: white;
   display: flex;
   flex-direction: row;
