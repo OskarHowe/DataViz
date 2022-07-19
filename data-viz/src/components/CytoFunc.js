@@ -32,6 +32,30 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
 }
 
 const CytoFunc = (props) => {
+  const initCytoscape = (cytoscapeRef) => {
+    cytoscapeRef.removeAllListeners();
+    // Prevent multiple selection & init elements selection behavior
+    cytoscapeRef.on("select", "node, edge", function (e) {
+      cytoscapeRef.elements().not(e.target).unselect();
+      console.log(`select ${e.target}`);
+      //const selectedElement = e.target;
+      //setCurrentElementDetails(getElementDetailsCallback(selectedElement));
+    });
+    cytoscapeRef.on("unselect", "node, edge", function (e) {
+      console.log(`unselect`);
+      props.onEntityDeselect();
+    });
+    // Add handling of double click events
+    cytoscapeRef.on("dbltap", "node", function (e) {
+      const selectedElement = e.target;
+      console.log(`doubletap on ${selectedElement}`);
+      console.log(selectedElement.data());
+
+      const origID = parseInt(selectedElement[0].data().id.match(/(\d+)/)[0]);
+      props.onEntitySelect(true, origID);
+    });
+  };
+  //define layout
   switch (props.layout) {
     case "dagre":
       cytoscape.use(dagre);
@@ -46,7 +70,7 @@ const CytoFunc = (props) => {
       props.layout = "dagre";
       break;
   }
-
+  //parse data into cyto format
   const graphData = CytoscapeComponent.normalizeElements(
     convertGraphJSONtoCytoFormat(props.jsonGraph)
   );
@@ -55,6 +79,7 @@ const CytoFunc = (props) => {
   console.log(nodeStylesheet);
   return (
     <CytoscapeComponent
+      cy={initCytoscape}
       elements={graphData}
       style={{ width: props.width, height: props.height }}
       layout={{

@@ -237,6 +237,8 @@ class App extends React.Component {
                   width={window.innerWidth}
                   height={window.innerHeight}
                   layout={this.state.layout}
+                  onEntitySelect={this.handleGraphEntityClicked}
+                  onEntityDeselect={this.handleGraphEntityDeselect}
                 />
               )))}
 

@@ -150,26 +150,58 @@ export default function G6Func(props) {
     const data = convertGraphJSONtoG6Format(props.jsonGraph);
     graph.data(data);
     graph.render();
+
     clusterBtn.addEventListener("click", (e) => {
       const clusteredData = louvain(data, false);
 
       clusteredData.clusters.forEach((cluster, i) => {
         console.log(cluster);
         const color = graphicsColors[i % graphicsColors.length];
-        graph.createHull({
-          id: `hull${i}`,
-          members: cluster.nodes.map((node) => node.id),
-          padding: 10,
-          style: {
-            fill: color,
-            opacity: 0,
-            strokeOpacity: 0.85,
-            stroke: "white",
+        const childNodes = cluster.nodes.map((node) => node.id);
+
+        graph.createCombo(
+          {
+            id: `combo1${i}`,
+            size: Math.sqrt(childNodes.length * Math.pow(40, 2)), //so that the volume of the compound is the added volume of the childnodes
+            label: childNodes.length,
+            labelCfg: {
+              position: "center",
+              style: {
+                fontSize: 25,
+                opacity: 0.85,
+                fill: "#4c4f52",
+                stroke: "#4c4f52",
+              },
+              // fontFamily: ["Source Sans Pro", "sans-serif"],
+            },
+            style: {
+              fill: color,
+              opacity: 0.2,
+              strokeOpacity: 0.85,
+              lineDash: [5, 5],
+              stroke: color,
+              lineWidth: 5,
+            },
           },
-        });
+          childNodes
+        );
+        // graph.createHull({
+        //   id: `hull${i}`,
+        //   members: cluster.nodes.map((node) => node.id),
+        //   padding: 10,
+        //   style: {
+        //     fill: color,
+        //     opacity: 0,
+        //     strokeOpacity: 0.85,
+        //     stroke: "white",
+        //   },
+        // });
       });
+
+      graph.getCombos().map((combo) => graph.collapseCombo(combo));
       graph.refresh();
     });
+
     graph.on("viewportchange", (evt) => {
       // some operations
       if (evt.action === "zoom") {
