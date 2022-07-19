@@ -84,6 +84,8 @@ class Modal extends React.Component {
               />
             )}
             <div></div>
+            <div></div>
+            <div></div>
             <BlueButton
               id="visualizeBtn"
               text="Visualize"

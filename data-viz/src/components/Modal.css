@@ -14,7 +14,7 @@
   width: 60em;
   height: 40em;
   border: 1px solid #292f33;
-  border-radius: 3px;
+  border-radius: 6px;
   box-shadow: 5px 6px 3px rgba(0, 0, 0, 0.29);
   color: white;
   font-family: "Source Sans Pro", sans-serif;
@@ -51,7 +51,7 @@
   margin-right: 2em;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-rows: repeat(5, 1fr);
 }
 
 .Modal .settingsElement-text {
