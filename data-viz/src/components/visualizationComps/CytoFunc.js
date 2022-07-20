@@ -1,5 +1,4 @@
 import React from "react";
-//import cytoscape from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 import { createNodeStyle, edgeStyle } from "./CytoStyles";
 import dagre from "cytoscape-dagre";
