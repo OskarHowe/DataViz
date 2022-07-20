@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
+import React, { PureComponent } from "react";
 import G6, { Algorithm } from "@antv/g6";
 import {
   createg6Vertex,
@@ -9,6 +8,7 @@ import {
   dagre,
   fruchterman,
   grid,
+  createCombo,
 } from "./G6Styles.js";
 import "./G6Func.css";
 import icons from "../../images/iconsBase64";
@@ -47,133 +47,38 @@ function convertGraphJSONtoG6Format(grapJsonObj) {
   return g6Graph;
 }
 
-export default function G6Func(props) {
-  //console.log(convertGraphJSONtoG6Format(props.jsonGraph));
-  const ref = React.useRef(null);
-  let graph = null;
-  let displayEdges = true;
-  const clusterBtn = document.getElementById("clusterBtn");
-  const hideEdgesBtn = document.getElementById("hideEdgesBtn");
-  hideEdgesBtn.addEventListener("click", () => {
-    let edges = graph.getEdges();
-    displayEdges = !displayEdges;
-    edges.forEach((edge) => {
-      displayEdges ? graph.showItem(edge, false) : graph.hideItem(edge, false);
-    });
-  });
-
-  let zommedOutMode = false;
-  const layouts = new Map();
-
-  useEffect(() => {
-    layouts.set("gForce", gForce(ref));
-    layouts.set("Force_with_Clustering", forceWithClustering);
-    layouts.set("Dagre", dagre);
-    layouts.set("Fruchterman", fruchterman);
-    layouts.set("Grid", grid(ref));
-    const minimap = new G6.Minimap({
-      size: [150, 100],
-    });
-    if (!graph) {
-      graph = new G6.Graph({
-        container: ReactDOM.findDOMNode(ref.current),
-        width: props.width,
-        height: props.height,
-        modes: {
-          default: [
-            "drag-node",
-            "drag-combo",
-            "collapse-expand-combo",
-            {
-              type: "drag-canvas",
-              enableOptimize: true, // enable the optimize to hide the shapes beside nodes' keyShape
-            },
-            {
-              type: "zoom-canvas",
-              enableOptimize: true, // enable the optimize to hide the shapes beside nodes' keyShape
-            },
-          ],
-        },
-        groupByTypes: false,
-        defaultCombo: {
-          style: {
-            fill: "#5F95FF",
-            opacity: 0.2,
-            stroke: "#5F95FF",
-            strokeOpacity: 0.85,
-          },
-        },
-        plugins: [minimap],
-        layout: layouts.get(props.layout),
-        fitCenter: true,
-      });
-    }
-    const clearStates = () => {
-      graph.getNodes().forEach((node) => {
-        graph.clearItemStates(node);
-      });
-      graph.getEdges().forEach((edge) => {
-        graph.clearItemStates(edge);
-      });
+export default class G6Func extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.g6Ref = null;
+    this.layouts = new Map();
+    this.state = {
+      clusteredData: null,
+      zommedOutMode: false,
+      data: null,
     };
+    this.addEventListeners = this.addEventListeners.bind(this);
+    this.bindEvents = this.bindEvents.bind(this);
+    this.clearStates = this.clearStates.bind(this);
+    this.comboNodes = this.comboNodes.bind(this);
+  }
+  comboNodes() {
+    this.state.clusteredData.clusters.forEach((cluster, i) => {
+      console.log(cluster);
+      const color = graphicsColors[i % graphicsColors.length];
+      const childNodes = cluster.nodes.map((node) => node.id);
 
-    graph.setMaxZoom(2);
-    const data = convertGraphJSONtoG6Format(props.jsonGraph);
-    graph.data(data);
-    graph.render();
-
-    clusterBtn.addEventListener("click", (e) => {
-      const clusteredData = louvain(data, false);
-
-      clusteredData.clusters.forEach((cluster, i) => {
-        console.log(cluster);
-        const color = graphicsColors[i % graphicsColors.length];
-        const childNodes = cluster.nodes.map((node) => node.id);
-
-        graph.createCombo(
-          {
-            id: `combo1${i}`,
-            size: Math.sqrt(childNodes.length * Math.pow(40, 2)), //so that the volume of the compound is the added volume of the childnodes
-            label: childNodes.length,
-            labelCfg: {
-              position: "center",
-              style: {
-                fontSize: 25,
-                opacity: 0.85,
-                fill: "#4c4f52",
-                stroke: "#4c4f52",
-              },
-              // fontFamily: ["Source Sans Pro", "sans-serif"],
-            },
-            style: {
-              fill: color,
-              opacity: 0.2,
-              strokeOpacity: 0.85,
-              lineDash: [5, 5],
-              stroke: color,
-              lineWidth: 5,
-            },
-          },
-          childNodes
-        );
-        // graph.createHull({
-        //   id: `hull${i}`,
-        //   members: cluster.nodes.map((node) => node.id),
-        //   padding: 10,
-        //   style: {
-        //     fill: color,
-        //     opacity: 0,
-        //     strokeOpacity: 0.85,
-        //     stroke: "white",
-        //   },
-        // });
-      });
-
-      graph.getCombos().map((combo) => graph.collapseCombo(combo));
-      graph.refresh();
+      this.g6Ref.createCombo(
+        createCombo(i, color, childNodes.length),
+        childNodes
+      );
     });
-
-    graph.on("viewportchange", (evt) => {
+    this.g6Ref.getCombos().map((combo) => this.g6Ref.collapseCombo(combo));
+    this.g6Ref.refresh();
+  }
+  addEventListeners() {}
+  bindEvents() {
+    this.g6Ref.on("viewportchange", (evt) => {
       // some operations
       if (evt.action === "zoom") {
         //console.log(evt);
@@ -182,8 +87,8 @@ export default function G6Func(props) {
         //get distance and save last distance
         //treshold = 0.9
         //if current distance > last distance, change render mode, and vice versa
-        if (evt.matrix.at(0) >= 0.9 && zommedOutMode) {
-          graph.getNodes().forEach((node) => {
+        if (evt.matrix.at(0) >= 0.9 && this.statezommedOutMode) {
+          this.g6Ref.getNodes().forEach((node) => {
             //console.log(node);
             const model = {
               icon: {
@@ -197,11 +102,11 @@ export default function G6Func(props) {
           });
           //near but not in mode so change mode and rendering
           //display icons
-          zommedOutMode = false;
-        } else if (evt.matrix.at(0) < 0.9 && !zommedOutMode) {
+          this.setState({ zommedOutMode: false });
+        } else if (evt.matrix.at(0) < 0.9 && !this.state.zommedOutMode) {
           //far but not in right mode so change mode and rendering
           //do not display icons
-          graph.getNodes().forEach((node) => {
+          this.g6Ref.getNodes().forEach((node) => {
             //console.log(node);
 
             const model = {
@@ -214,45 +119,138 @@ export default function G6Func(props) {
             };
             node.update(model);
           });
-          zommedOutMode = true;
+          this.setState({ zommedOutMode: true });
         }
       }
     });
-    graph.on("node:mouseenter", (e) => {
+    this.g6Ref.on("node:mouseenter", (e) => {
       const nodeItem = e.item; // Get the target item
-      graph.setItemState(nodeItem, "hover", true); // Set the state 'hover' of the item to be true
+      this.g6Ref.setItemState(nodeItem, "hover", true); // Set the state 'hover' of the item to be true
     });
-    graph.on("canvas:click", (e) => {
-      clearStates();
-      props.onEntityDeselect();
+    this.g6Ref.on("canvas:click", (e) => {
+      this.clearStates();
+      this.props.onEntityDeselect();
     });
-    graph.on("node:mouseleave", (e) => {
+    this.g6Ref.on("node:mouseleave", (e) => {
       const nodeItem = e.item; // Get the target item
-      graph.setItemState(nodeItem, "hover", false); // Set the state 'hover' of the item to be false
+      this.g6Ref.setItemState(nodeItem, "hover", false); // Set the state 'hover' of the item to be false
     });
-    graph.on("node:click", (e) => {
-      clearStates();
+    this.g6Ref.on("node:dblclick", (e) => {
+      this.clearStates();
       const nodeItem = e.item; // e the clicked item
-      graph.setItemState(nodeItem, "click", true); // Set the state 'click' of the item to be true
+      this.g6Ref.setItemState(nodeItem, "click", true); // Set the state 'click' of the item to be true
       const inEdges = nodeItem.getInEdges();
       inEdges.forEach((edge) => {
-        graph.setItemState(edge, "selected", true);
+        this.g6Ref.setItemState(edge, "selected", true);
       });
       const outEdges = nodeItem.getOutEdges();
       outEdges.forEach((edge) => {
-        graph.setItemState(edge, "clicked", true);
+        this.g6Ref.setItemState(edge, "clicked", true);
       });
-      const clickNodes = graph.findAllByState("node", "click");
-      graph.focusItem(nodeItem, true, {
+      const clickNodes = this.g6Ref.findAllByState("node", "click");
+      this.g6Ref.focusItem(nodeItem, true, {
         easing: "easeCubic",
         duration: 400,
       });
       console.log(clickNodes[0].getID());
       //retrieve ode from nodeIdString of format: "nodeID"
       const origID = parseInt(clickNodes[0].getID().match(/(\d+)/)[0]);
-      props.onEntitySelect(origID); //return the entity type (node/edge) the original node ID, and the reference to the selected icon
+      this.props.onEntitySelect(origID); //return the entity type (node/edge) the original node ID, and the reference to the selected icon
     });
-  }, []);
-
-  return <div ref={ref}></div>;
+  }
+  clearStates() {
+    this.g6Ref.getNodes().forEach((node) => {
+      this.g6Ref.clearItemStates(node);
+    });
+    this.g6Ref.getEdges().forEach((edge) => {
+      this.g6Ref.clearItemStates(edge);
+    });
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.displayEdges !== this.props.displayEdges) {
+      let edges = this.g6Ref.getEdges();
+      edges.forEach((edge) => {
+        this.props.displayEdges
+          ? this.g6Ref.showItem(edge, false)
+          : this.g6Ref.hideItem(edge, false);
+      });
+    }
+    if (prevProps.clusterNodes !== this.props.clusterNodes) {
+      if (this.props.clusterNodes) {
+        //create combos
+        if (this.state.clusteredData === null) {
+          this.setState(
+            { clusteredData: louvain(this.state.data, false) },
+            () => {
+              this.comboNodes();
+            }
+          );
+        } else {
+          this.comboNodes();
+        }
+      } else {
+        //decombo
+        //lower functions would be better but uncombo removes the nodes if the parent combo of the
+        this.g6Ref.getCombos().forEach((combo) => this.g6Ref.uncombo(combo));
+        //this.g6Ref.refresh();
+        // this.g6Ref.data(this.state.data);
+        this.g6Ref.render();
+      }
+    }
+  }
+  componentDidMount() {
+    this.layouts.set("gForce", gForce(this.props.width, this.props.height));
+    this.layouts.set("Force_with_Clustering", forceWithClustering);
+    this.layouts.set("Dagre", dagre);
+    this.layouts.set("Fruchterman", fruchterman);
+    this.layouts.set("Grid", grid(this.props.width, this.props.height));
+    const minimap = new G6.Minimap({
+      size: [150, 100],
+    });
+    this.g6Ref = new G6.Graph({
+      container: "g6-react",
+      width: this.props.width,
+      height: this.props.height,
+      modes: {
+        default: [
+          "drag-node",
+          "drag-combo",
+          "collapse-expand-combo",
+          {
+            type: "drag-canvas",
+            enableOptimize: true, // enable the optimize to hide the shapes beside nodes' keyShape
+          },
+          {
+            type: "zoom-canvas",
+            enableOptimize: true, // enable the optimize to hide the shapes beside nodes' keyShape
+          },
+        ],
+      },
+      groupByTypes: false,
+      defaultCombo: {
+        style: {
+          fill: "#5F95FF",
+          opacity: 0.2,
+          stroke: "#5F95FF",
+          strokeOpacity: 0.85,
+        },
+      },
+      plugins: [minimap],
+      layout: this.layouts.get(this.props.layout),
+      fitCenter: true,
+    });
+    this.g6Ref.setMaxZoom(2);
+    let data = convertGraphJSONtoG6Format(this.props.jsonGraph);
+    this.setState({ data: data });
+    this.g6Ref.data(data);
+    this.addEventListeners();
+    this.bindEvents();
+    this.g6Ref.render();
+  }
+  componentWillUnmount() {
+    this.g6Ref.destroy();
+  }
+  render() {
+    return <div id="g6-react"></div>;
+  }
 }

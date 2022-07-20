@@ -68,12 +68,34 @@ const createg6Edge = (edge) => ({
   },
 });
 
-const gForce = (ref) => ({
+const createCombo = (i, color, childrenAmount) => ({
+  id: `combo1${i}`,
+  type: "rect",
+  //size: Math.sqrt(childrenAmount * Math.pow(40, 2)), //so that the volume of the compound is the added volume of the childnodes
+  size: [childrenAmount * 10, 40], //so that the volume of the compound is the added volume of the childnodes
+  label: childrenAmount,
+  labelCfg: {
+    position: "center",
+    style: {
+      fontSize: 25,
+      opacity: 0.85,
+      fill: "#4c4f52",
+      stroke: "#4c4f52",
+    },
+    // fontFamily: ["Source Sans Pro", "sans-serif"],
+  },
+  style: {
+    fill: color,
+    opacity: 0,
+    strokeOpacity: 0.85,
+    lineDash: [5, 5],
+    stroke: color,
+    lineWidth: 5,
+  },
+});
+const gForce = (width, height) => ({
   type: "gForce",
-  center: [
-    ref.current.parentElement.offsetWidth / 2,
-    ref.current.parentElement.offsetHeight / 2,
-  ], // The center of the graph by default
+  center: [width / 2, height / 2], // The center of the graph by default
   linkDistance: 1,
   nodeStrength: 1000,
   preventOverlap: true,
@@ -124,11 +146,11 @@ const fruchterman = {
   workerEnabled: true, // Whether to activate web-worker
   gpuEnabled: true, // Whether to enable the GPU parallel computing, supported by G6 4.0
 };
-const grid = (ref) => ({
+const grid = (width, height) => ({
   type: "grid",
   begin: [20, 20],
-  width: ref.current.parentElement.offsetWidth - 20,
-  height: ref.current.parentElement.offsetHeight - 20,
+  width: width - 20,
+  height: height - 20,
 });
 export {
   createg6Vertex,
@@ -138,4 +160,5 @@ export {
   dagre,
   fruchterman,
   grid,
+  createCombo,
 };

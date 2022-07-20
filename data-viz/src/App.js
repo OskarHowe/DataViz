@@ -13,6 +13,8 @@ class App extends React.Component {
     this.state = {
       displayModal: false,
       displayInfoModal: false,
+      displayEdges: false,
+      clusterNodes: false,
       remoteGraphIDs: null,
       selectedRemoteGraphID: null,
       layout: null,
@@ -49,7 +51,8 @@ class App extends React.Component {
     this.handleModalSubmit = this.handleModalSubmit.bind(this);
     this.handleGraphEntityClicked = this.handleGraphEntityClicked.bind(this);
     this.handleGraphEntityDeselect = this.handleGraphEntityDeselect.bind(this);
-
+    this.toggleEdges = this.toggleEdges.bind(this);
+    this.toggleClusters = this.toggleClusters.bind(this);
     this.fetchGraphIDs();
   }
   /**
@@ -63,6 +66,13 @@ class App extends React.Component {
    */
   toggleInfoModal() {
     this.setState({ displayInfoModal: !this.state.displayInfoModal });
+  }
+
+  toggleEdges() {
+    this.setState({ displayEdges: !this.state.displayEdges });
+  }
+  toggleClusters() {
+    this.setState({ clusterNodes: !this.state.clusterNodes });
   }
   /**
    * Gets called by the Graph Component
@@ -224,6 +234,8 @@ class App extends React.Component {
                 width={window.innerWidth}
                 height={window.innerHeight - 200}
                 layout={this.state.layout}
+                displayEdges={this.state.displayEdges}
+                clusterNodes={this.state.clusterNodes}
                 onEntitySelect={this.handleGraphEntityClicked}
                 onEntityDeselect={this.handleGraphEntityDeselect}
               />
@@ -258,18 +270,14 @@ class App extends React.Component {
             <BlueButton
               id="hideEdgesBtn"
               text="Toggle Edges"
-              onClick={() => {
-                console.log("Toggle Edges!");
-              }}
+              onClick={this.toggleEdges}
             />
           )}
           {this.state.visualizationLib === "G6" && (
             <BlueButton
               id="clusterBtn"
-              text="Find Clusters"
-              onClick={() => {
-                console.log("Louvain applied!");
-              }}
+              text="Toggle Clusters"
+              onClick={this.toggleClusters}
             />
           )}
         </main>
