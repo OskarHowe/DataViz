@@ -13,8 +13,8 @@ class App extends React.Component {
     this.state = {
       displayModal: false,
       displayInfoModal: false,
-      graphRedisStrings: null,
-      selectedRedisGraphString: null,
+      remoteGraphIDs: null,
+      selectedRemoteGraphID: null,
       layout: null,
       visualizationLib: null,
       selectedNode: {
@@ -41,7 +41,6 @@ class App extends React.Component {
         },
       ],
       loadedGrapEntityJSON: null,
-      loading: true,
       verticesMap: null,
       displayGraph: false,
     };
@@ -50,6 +49,7 @@ class App extends React.Component {
     this.handleModalSubmit = this.handleModalSubmit.bind(this);
     this.handleGraphEntityClicked = this.handleGraphEntityClicked.bind(this);
     this.handleGraphEntityDeselect = this.handleGraphEntityDeselect.bind(this);
+
     this.fetchGraphIDs();
   }
   /**
@@ -58,41 +58,44 @@ class App extends React.Component {
   toggleModal() {
     this.setState({ displayModal: !this.state.displayModal });
   }
+  /**
+   * Inverts the visibility of the infomodal
+   */
   toggleInfoModal() {
     this.setState({ displayInfoModal: !this.state.displayInfoModal });
   }
-  handleGraphEntityClicked(isNode, id, icon) {
-    //get reference to corresponding node and store it in state
-    //get incoming, outgoing edges (from the redisData or the graphical node?)
-    //the icon does not need to be loaded from the graphical node, because normally we associate
-    //the icon with a nodeproperty outside the G6 class
-    //update the state so that the information Modal gets rerendered
-    if (isNode) {
-      const selectedNode = this.state.verticesMap.get(id);
-      console.log("slectedNode: ");
-      console.log(selectedNode);
-      if (selectedNode) {
-        this.setState(
-          {
-            selectedNode: {
-              id: selectedNode.id,
-              label: selectedNode.labels,
-              fromVertices: selectedNode.fromVertices.length,
-              toVertices: selectedNode.toVertices.length,
-              params: selectedNode.properties,
-            },
+  /**
+   * Gets called by the Graph Component
+   * Passes the id of the clicked node and the icon
+   *
+   * get reference to corresponding node and store it in state
+   * get incoming, outgoing edges (from the redisData or the graphical node?)
+   * the icon does not need to be loaded from the graphical node, because normally we associate
+   * the icon with a nodeproperty outside the G6 class
+   * update the state so that the information Modal gets rerendered
+   */
+  handleGraphEntityClicked(id, icon) {
+    const selectedNode = this.state.verticesMap.get(id);
+    if (selectedNode) {
+      this.setState(
+        {
+          //prepare props for the InfoModal
+          selectedNode: {
+            id: selectedNode.id,
+            label: selectedNode.labels,
+            fromVertices: selectedNode.fromVertices.length,
+            toVertices: selectedNode.toVertices.length,
+            params: selectedNode.properties,
           },
-          () => {
-            console.log("slectedNodeState: ");
-            console.log(this.state.selectedNode);
-            this.setState({ displayInfoModal: true });
-          }
-        );
-      }
+        },
+        () => {
+          //open the infomodal
+          this.setState({ displayInfoModal: true });
+        }
+      );
     }
-
-    //this.setState({ displayInfoModal: !this.state.displayInfoModal });
   }
+
   handleGraphEntityDeselect() {
     this.setState({ displayInfoModal: false });
   }
@@ -111,10 +114,10 @@ class App extends React.Component {
       })
       .then((json) => {
         console.log(`List of graph entities in Redis fetched: ${json}`);
-        this.setState({ graphRedisStrings: json });
+        this.setState({ remoteGraphIDs: json });
       })
       .then(() => {
-        this.setState({ loading: false });
+        this.setState({ displayModal: true });
       })
       .catch((error) => {
         console.log(error);
@@ -127,7 +130,6 @@ class App extends React.Component {
    */
   fetchGraphEntity(graphID) {
     let graphId = graphID;
-    //logString(`Selected ${graphId} to download`);
     const startTime = window.performance.now();
     fetch(`http://localhost:25566/graph/${graphId}`) //because fetch returns a promise
       .then((response) => {
@@ -139,14 +141,11 @@ class App extends React.Component {
       .then((json) => {
         const endTime = window.performance.now();
         json.measures.push({ nodeFetchDuration: endTime - startTime });
-        //console.log(`Fetched ${graphId} from server`);
-        //console.log(json);
         let verticesMap = new Map();
-        json.graph.vertices.map((value) => {
+        json.graph.vertices.forEach((value) => {
           verticesMap.set(value.id, value);
         });
-        this.setState({ loadedGrapEntityJSON: json });
-        this.setState({ verticesMap: verticesMap });
+        this.setState({ loadedGrapEntityJSON: json, verticesMap: verticesMap });
       })
       .then(() => {
         this.setState({ displayGraph: true });
@@ -157,24 +156,20 @@ class App extends React.Component {
   }
   /**
    * closes the modal and calls a function to fetch a specific redis graph entity
-   *
    * @param {*} graphRedisString
    */
   handleModalSubmit(graphRedisString, choosenLayout, choosenLib) {
     if (
-      graphRedisString === this.state.selectedRedisGraphString &&
+      graphRedisString === this.state.selectedRemoteGraphID &&
       choosenLayout === this.state.layout &&
       choosenLib === this.state.visualizationLib
     ) {
-      //console.log("graph and layout same");
+      //nothing changed
       this.setState({
         displayModal: false,
       });
-      return;
-    } else if (graphRedisString === this.state.selectedRedisGraphString) {
-      //just the layout changed
-      //console.log("graph same and layout changed");
-
+    } else if (graphRedisString === this.state.selectedRemoteGraphID) {
+      //the layout and/or lib changed
       this.setState(
         {
           displayModal: false,
@@ -187,20 +182,22 @@ class App extends React.Component {
           this.setState({ displayGraph: true });
         }
       );
-      return;
     }
-    //console.log("graph changed");
-    //fetch an other graph entity
-    this.setState({
-      displayModal: false,
-      displayInfoModal: false,
-      selectedRedisGraphString: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
-      layout: choosenLayout,
-      visualizationLib: choosenLib,
-      displayGraph: false,
-    });
-    this.fetchGraphEntity(graphRedisString);
+    //the graph entity to dowload and display changed
+    //fetch the graph entity
+    else {
+      this.setState({
+        displayModal: false,
+        displayInfoModal: false,
+        selectedRemoteGraphID: graphRedisString, //is not updated when the function below is called, so i pass the parameter directly
+        layout: choosenLayout,
+        visualizationLib: choosenLib,
+        displayGraph: false,
+      });
+      this.fetchGraphEntity(graphRedisString);
+    }
   }
+
   render() {
     return (
       <div className="App">
@@ -211,14 +208,14 @@ class App extends React.Component {
           </div>
           <img src={logo} className="App-logo" alt="logo" />
         </header>
-        {this.state.displayModal && !this.loading ? (
+        {this.state.displayModal && (
           <Modal
             toggle={this.toggleModal}
-            remoteEntities={this.state.graphRedisStrings}
+            remoteEntities={this.state.remoteGraphIDs}
             visLibs={this.state.visLibs}
             onSubmit={this.handleModalSubmit}
           />
-        ) : null}
+        )}
         <main className="graph-node">
           {this.state.displayGraph &&
             ((this.state.visualizationLib === "G6" && (
