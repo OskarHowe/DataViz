@@ -1,8 +1,8 @@
 import React from "react";
 import "./InfoModal.css";
 import CloseButton from "./CloseButton";
-import arrowIn from "../images/Arrow In.png";
-import arrowOut from "../images/Arrow Out.png";
+import arrowIn from "../../images/Arrow In.png";
+import arrowOut from "../../images/Arrow Out.png";
 import Draggable from "react-draggable";
 
 class InfoModal extends React.Component {

@@ -11,7 +11,7 @@ import {
   grid,
 } from "./G6Styles.js";
 import "./G6Func.css";
-import icons from "../images/iconsBase64";
+import icons from "../../images/iconsBase64";
 const { louvain } = Algorithm;
 const graphicsColors = [
   "#5F95FF", // blue
@@ -279,7 +279,7 @@ export default function G6Func(props) {
       console.log(clickNodes[0].getID());
       //retrieve ode from nodeIdString of format: "nodeID"
       const origID = parseInt(clickNodes[0].getID().match(/(\d+)/)[0]);
-      props.onEntitySelect(true, origID); //return the entity type (node/edge) the original node ID, and the reference to the selected icon
+      props.onEntitySelect(origID); //return the entity type (node/edge) the original node ID, and the reference to the selected icon
     });
   }, []);
 

@@ -1,8 +1,8 @@
 import React from "react";
 import "./Modal.css";
-import BlueButton from "./BlueButton";
-import SelectSimple from "./SelectSimple";
-import CloseButton from "./CloseButton";
+import BlueButton from "./statelessComps/BlueButton";
+import SelectSimple from "./statelessComps/SelectSimple";
+import CloseButton from "./statelessComps/CloseButton";
 
 class Modal extends React.Component {
   constructor(props) {

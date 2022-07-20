@@ -35,7 +35,7 @@ function createNodeStyle(nodes) {
   const colorMap = new Map();
   const nodeTypesSet = new Set();
   //retrieve all existing labels without doubles from the nodes array
-  nodes.map((node) => {
+  nodes.forEach((node) => {
     nodeTypesSet.add(node.labels);
   });
   let style = [];

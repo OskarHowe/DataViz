@@ -52,7 +52,7 @@ const CytoFunc = (props) => {
       console.log(selectedElement.data());
 
       const origID = parseInt(selectedElement[0].data().id.match(/(\d+)/)[0]);
-      props.onEntitySelect(true, origID);
+      props.onEntitySelect(origID);
     });
   };
   //define layout
