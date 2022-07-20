@@ -36,19 +36,17 @@ const CytoFunc = (props) => {
     // Prevent multiple selection & init elements selection behavior
     cytoscapeRef.on("select", "node, edge", function (e) {
       cytoscapeRef.elements().not(e.target).unselect();
-      console.log(`select ${e.target}`);
       //const selectedElement = e.target;
       //setCurrentElementDetails(getElementDetailsCallback(selectedElement));
     });
-    cytoscapeRef.on("unselect", "node, edge", function (e) {
-      console.log(`unselect`);
+    cytoscapeRef.on("tapunselect", "node", function (e) {
       props.onEntityDeselect();
     });
     // Add handling of double click events
     cytoscapeRef.on("dbltap", "node", function (e) {
+      cytoscapeRef.elements().not(e.target).unselect();
       const selectedElement = e.target;
       console.log(`doubletap on ${selectedElement}`);
-      console.log(selectedElement.data());
 
       const origID = parseInt(selectedElement[0].data().id.match(/(\d+)/)[0]);
       props.onEntitySelect(origID);
