@@ -8,9 +8,12 @@ import Draggable from "react-draggable";
 class InfoModal extends React.Component {
   render() {
     return (
-      <Draggable>
+      <Draggable enableUserSelectHack={false}>
         <div
           className="InfoModal"
+          onDragStart={(evt) => {
+            evt.preventDefault();
+          }}
           style={
             this.props.visible
               ? { visibility: "visible" }

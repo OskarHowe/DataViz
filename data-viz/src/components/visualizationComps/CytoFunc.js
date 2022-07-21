@@ -34,14 +34,14 @@ const CytoFunc = (props) => {
   const initCytoscape = (cytoscapeRef) => {
     cytoscapeRef.removeAllListeners();
     // Prevent multiple selection & init elements selection behavior
-    cytoscapeRef.on("select", "node, edge", function (e) {
-      cytoscapeRef.elements().not(e.target).unselect();
-      //const selectedElement = e.target;
-      //setCurrentElementDetails(getElementDetailsCallback(selectedElement));
-    });
-    cytoscapeRef.on("tapunselect", "node", function (e) {
-      props.onEntityDeselect();
-    });
+    // cytoscapeRef.on("select", "node, edge", function (e) {
+    //   cytoscapeRef.elements().not(e.target).unselect();
+    //   //const selectedElement = e.target;
+    //   //setCurrentElementDetails(getElementDetailsCallback(selectedElement));
+    // });
+    // cytoscapeRef.on("tapunselect", "node", function (e) {
+    //   props.onEntityDeselect();
+    // });
     // Add handling of double click events
     cytoscapeRef.on("dbltap", "node", function (e) {
       cytoscapeRef.elements().not(e.target).unselect();
