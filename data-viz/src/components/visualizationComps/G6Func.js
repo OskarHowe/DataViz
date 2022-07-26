@@ -75,6 +75,7 @@ export default class G6Func extends PureComponent {
     });
     this.g6Ref.getCombos().map((combo) => this.g6Ref.collapseCombo(combo));
     this.g6Ref.refresh();
+    //this.g6Ref.render();
   }
   addEventListeners() {}
   bindEvents() {
@@ -227,14 +228,6 @@ export default class G6Func extends PureComponent {
         ],
       },
       groupByTypes: false,
-      defaultCombo: {
-        style: {
-          fill: "#5F95FF",
-          opacity: 0.2,
-          stroke: "#5F95FF",
-          strokeOpacity: 0.85,
-        },
-      },
       plugins: [minimap],
       layout: this.layouts.get(this.props.layout),
       fitCenter: true,

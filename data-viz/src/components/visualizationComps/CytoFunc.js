@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { createNodeStyle, edgeStyle } from "./CytoStyles";
 import dagre from "cytoscape-dagre";
@@ -13,10 +13,23 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
       classes: node.labels,
       data: {
         id: "node" + node.id,
+        parent: `compond${node.id % 3}`,
         label: node.labels,
       },
     });
   });
+  const compounds = [0, 1, 2];
+  compounds.forEach((compound) => {
+    elements.push({
+      group: "nodes",
+      classes: "compound",
+      data: {
+        id: `compond${compound}`,
+        label: "compond" + compound,
+      },
+    });
+  });
+
   grapJsonObj.edges.forEach((edge) => {
     elements.push({
       groupe: "edges",
@@ -31,18 +44,13 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
 }
 
 const CytoFunc = (props) => {
+  useEffect(() => {
+    console.log(
+      `useEffect() called with change of clusterNodes which is now: ${props.clusterNodes}`
+    );
+  }, [props.clusterNodes]);
   const initCytoscape = (cytoscapeRef) => {
     cytoscapeRef.removeAllListeners();
-    // Prevent multiple selection & init elements selection behavior
-    // cytoscapeRef.on("select", "node, edge", function (e) {
-    //   cytoscapeRef.elements().not(e.target).unselect();
-    //   //const selectedElement = e.target;
-    //   //setCurrentElementDetails(getElementDetailsCallback(selectedElement));
-    // });
-    // cytoscapeRef.on("tapunselect", "node", function (e) {
-    //   props.onEntityDeselect();
-    // });
-    // Add handling of double click events
     cytoscapeRef.on("dbltap", "node", function (e) {
       cytoscapeRef.elements().not(e.target).unselect();
       const selectedElement = e.target;

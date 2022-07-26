@@ -187,6 +187,8 @@ class App extends React.Component {
           layout: choosenLayout,
           visualizationLib: choosenLib,
           displayGraph: false,
+          displayEdges: false,
+          clusterNodes: false,
         },
         () => {
           this.setState({ displayGraph: true });
@@ -203,6 +205,8 @@ class App extends React.Component {
         layout: choosenLayout,
         visualizationLib: choosenLib,
         displayGraph: false,
+        displayEdges: false,
+        clusterNodes: false,
       });
       this.fetchGraphEntity(graphRedisString);
     }
@@ -246,6 +250,7 @@ class App extends React.Component {
                   width={window.innerWidth}
                   height={window.innerHeight}
                   layout={this.state.layout}
+                  clusterNodes={this.state.clusterNodes}
                   onEntitySelect={this.handleGraphEntityClicked}
                   onEntityDeselect={this.handleGraphEntityDeselect}
                 />
@@ -273,13 +278,12 @@ class App extends React.Component {
               onClick={this.toggleEdges}
             />
           )}
-          {this.state.visualizationLib === "G6" && (
-            <BlueButton
-              id="clusterBtn"
-              text="Toggle Clusters"
-              onClick={this.toggleClusters}
-            />
-          )}
+
+          <BlueButton
+            id="clusterBtn"
+            text="Toggle Clusters"
+            onClick={this.toggleClusters}
+          />
         </main>
       </div>
     );
