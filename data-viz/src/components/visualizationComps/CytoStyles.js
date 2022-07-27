@@ -32,6 +32,33 @@ function createNodeStyle(nodes) {
         label: "data(label)",
       },
     });
+    style.push({
+      selector: `node.${nodeClass}:selected`,
+      style: {
+        color: "#fff",
+        "background-color": color,
+        "background-opacity": 0.5,
+        // "border-style": solid,
+        "border-width": 3,
+        "border-color": "#fff",
+        "border-opacity": 0.85,
+        width: 45,
+        height: 45,
+        label: "data(label)",
+      },
+    });
+    style.push({
+      selector: `node.compound`,
+      style: {
+        color: "#fff",
+        "background-opacity": 0,
+        "border-style": "dashed",
+        "border-width": 3,
+        "border-color": color,
+        "border-opacity": 0.85,
+        //label: "data(label)",
+      },
+    });
   });
   //get a color for each label in nodes
   return {

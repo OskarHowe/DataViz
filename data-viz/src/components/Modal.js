@@ -47,7 +47,7 @@ class Modal extends React.Component {
     return (
       <div className="ModalWrapper">
         <div className="Modal">
-          <CloseButton onClick={this.props.toggle} />
+          {/* <CloseButton onClick={this.props.toggle} /> */}
           <h3>Display your Digital Twin Entity</h3>
           <hr />
           <div className="settingsElement">
@@ -86,11 +86,13 @@ class Modal extends React.Component {
             <div></div>
             <div></div>
             <div></div>
-            <BlueButton
+            <button
               id="visualizeBtn"
-              text="Visualize"
-              onClick={this.handleSubmit}
-            />
+              className="BlueButton"
+              onClick={() => this.handleSubmit()}
+            >
+              Visualize
+            </button>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 .InfoModal {
   position: absolute;
+  z-index: 5;
   background-color: #4c4f52;
   top: 50%;
   left: 50%;

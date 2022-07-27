@@ -270,20 +270,30 @@ class App extends React.Component {
             toggle={this.toggleInfoModal}
           />
 
-          <BlueButton id="closeBtn" text="+" onClick={this.toggleModal} />
+          <button
+            id="closeBtn"
+            className="BlueButton"
+            onClick={() => this.toggleModal()}
+          >
+            +
+          </button>
           {this.state.visualizationLib === "G6" && (
-            <BlueButton
+            <button
               id="hideEdgesBtn"
-              text="Toggle Edges"
-              onClick={this.toggleEdges}
-            />
+              className="BlueButton"
+              onClick={() => this.toggleEdges()}
+            >
+              Toggle Edges
+            </button>
           )}
 
-          <BlueButton
+          <button
             id="clusterBtn"
-            text="Toggle Clusters"
-            onClick={this.toggleClusters}
-          />
+            className="BlueButton"
+            onClick={() => this.toggleClusters()}
+          >
+            Toggle Clusters
+          </button>
         </main>
       </div>
     );
