@@ -10,7 +10,7 @@ const compoundOptions = {
   layoutBy: null, // to rearrange after expand/collapse. It's just layout options or whole layout function. Choose your side!
   // recommended usage: use cose-bilkent layout with randomize: false to preserve mental map upon expand/collapse
   //fisheye: true, // whether to perform fisheye view after expand/collapse you can specify a function too
-  animate: false, // whether to animate on drawing changes you can specify a function too
+  animate: true, // whether to animate on drawing changes you can specify a function too
   animationDuration: 1000, // when animate is true, the duration in milliseconds of the animation
   ready: function () {}, // callback when expand/collapse initialized
   undoable: true, // and if undoRedoExtension exists,
@@ -118,20 +118,22 @@ class CytoFunc extends PureComponent {
       console.log(
         `useEffect() called with change of clusterNodes which is now: ${this.props.clusterNodes}`
       );
+
       if (this.props.clusterNodes) {
         this.compoundsApi.collapseAll(compoundOptions);
-        //this.compoundsApi.collapseAllEdges();
+        this.compoundsApi.collapseAllEdges();
       } else {
+        this.compoundsApi.expandAllEdges();
         this.compoundsApi.expandAll(compoundOptions);
-        //this.compoundsApi.expandAllEdges(compoundOptions);
       }
+      console.log(this.state.cy.elements());
     }
   }
   initCyto(cytoRef, props) {
     cytoRef.removeAllListeners();
     cytoRef.elements().removeAllListeners();
     this.compoundsApi = cytoRef.expandCollapse(compoundOptions);
-    cytoRef.on("select", "node", function (e) {
+    cytoRef.on("select", "node:child", function (e) {
       cytoRef
         .elements()
         .not(e.target)
@@ -142,10 +144,10 @@ class CytoFunc extends PureComponent {
 
       const selectedElement = e.target;
       selectedElement.select();
-      //console.log(`doubletap on: `);
-      //console.log(selectedElement);
-      selectedElement.outgoers("edge").select();
-      selectedElement.incomers("edge").lock();
+      console.log(`doubletap on: `);
+      console.log(selectedElement);
+      selectedElement.outgoers("edge").lock();
+      selectedElement.incomers("edge").select();
       //console.log(selectedElement.connectedEdges());
       const origID = parseInt(selectedElement[0].data().id.match(/(\d+)/)[0]);
       props.onEntitySelect(origID);
@@ -155,6 +157,7 @@ class CytoFunc extends PureComponent {
         elem.unselect();
         elem.unlock();
       });
+      props.onEntityDeselect();
     });
     this.setState({ cy: cytoRef });
   }

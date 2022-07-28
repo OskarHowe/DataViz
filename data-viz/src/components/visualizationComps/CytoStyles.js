@@ -37,7 +37,7 @@ function createNodeStyle(nodes) {
       style: {
         color: "#fff",
         "background-color": color,
-        "background-opacity": 0.5,
+        "background-opacity": 0.3,
         // "border-style": solid,
         "border-width": 3,
         "border-color": "#fff",
@@ -73,7 +73,7 @@ function createNodeStyle(nodes) {
     },
   });
   style.push({
-    selector: "edge:selected",
+    selector: "edge:locked",
     style: {
       "line-color": "#fff",
       "target-arrow-color": "#fff",
@@ -85,7 +85,7 @@ function createNodeStyle(nodes) {
     },
   });
   style.push({
-    selector: "edge:locked",
+    selector: "edge:selected",
     style: {
       "line-color": "#fff",
       "target-arrow-color": "#fff",
