@@ -109,6 +109,7 @@ class CytoFunc extends PureComponent {
         stylesheet={this.state.nodeStylesheet.style}
         minZoom={0.2}
         maxZoom={2}
+        hideEdgesOnViewport={true}
       />
     );
   }
@@ -125,6 +126,21 @@ class CytoFunc extends PureComponent {
       } else {
         this.compoundsApi.expandAllEdges();
         this.compoundsApi.expandAll(compoundOptions);
+      }
+      console.log(this.state.cy.elements());
+    }
+    //state of display edges changed
+    if (this.props.displayEdges !== prevProps.displayEdges) {
+      console.log(
+        `useEffect() called with change of displayEdges which is now: ${this.props.displayEdges}`
+      );
+
+      if (this.props.displayEdges) {
+        //didplay all edges
+        this.state.cy.edges().hide();
+      } else {
+        //hide all edges
+        this.state.cy.edges().show();
       }
       console.log(this.state.cy.elements());
     }

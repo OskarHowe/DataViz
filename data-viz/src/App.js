@@ -249,6 +249,7 @@ class App extends React.Component {
                   width={window.innerWidth}
                   height={window.innerHeight}
                   layout={this.state.layout}
+                  displayEdges={this.state.displayEdges}
                   clusterNodes={this.state.clusterNodes}
                   onEntitySelect={this.handleGraphEntityClicked}
                   onEntityDeselect={this.handleGraphEntityDeselect}
@@ -276,15 +277,13 @@ class App extends React.Component {
           >
             +
           </button>
-          {this.state.visualizationLib === "G6" && (
-            <button
-              id="hideEdgesBtn"
-              className="BlueButton"
-              onClick={() => this.toggleEdges()}
-            >
-              Toggle Edges
-            </button>
-          )}
+          <button
+            id="hideEdgesBtn"
+            className="BlueButton"
+            onClick={() => this.toggleEdges()}
+          >
+            Toggle Edges
+          </button>
 
           <button
             id="clusterBtn"
