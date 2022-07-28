@@ -2,7 +2,6 @@ import React from "react";
 import logo from "./cosmotechDark.png";
 import Modal from "./components/Modal";
 import "./App.css";
-import BlueButton from "./components/statelessComps/BlueButton";
 import InfoModal from "./components/statelessComps/InfoModal";
 import G6Func from "./components/visualizationComps/G6Func";
 import CytoFunc from "./components/visualizationComps/CytoFunc";

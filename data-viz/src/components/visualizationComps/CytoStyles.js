@@ -61,19 +61,43 @@ function createNodeStyle(nodes) {
     });
   });
   //get a color for each label in nodes
+  style.push({
+    selector: "edge",
+    style: {
+      "line-color": "#fff",
+      "target-arrow-color": "#fff",
+      width: 4,
+      opacity: 0.3, // The opacity of edges
+      "target-arrow-shape": "triangle",
+      "curve-style": "bezier",
+    },
+  });
+  style.push({
+    selector: "edge:selected",
+    style: {
+      "line-color": "#fff",
+      "target-arrow-color": "#fff",
+      width: 6,
+      opacity: 0.8, // The opacity of edges
+      "line-style": "dashed",
+      "target-arrow-shape": "triangle",
+      "curve-style": "bezier",
+    },
+  });
+  style.push({
+    selector: "edge:locked",
+    style: {
+      "line-color": "#fff",
+      "target-arrow-color": "#fff",
+      width: 6,
+      opacity: 0.8, // The opacity of edges
+      "target-arrow-shape": "triangle",
+      "curve-style": "bezier",
+    },
+  });
   return {
     style,
   };
 }
 
-const edgeStyle = {
-  selector: "edge",
-  style: {
-    width: 6,
-    opacity: 0.3, // The opacity of edges
-    "target-arrow-shape": "triangle",
-    "curve-style": "bezier",
-  },
-};
-
-export { createNodeStyle, edgeStyle };
+export { createNodeStyle };

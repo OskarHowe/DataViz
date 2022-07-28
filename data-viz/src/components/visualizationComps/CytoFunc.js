@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import { createNodeStyle, edgeStyle } from "./CytoStyles";
+import { createNodeStyle } from "./CytoStyles";
 import expandCollapse from "cytoscape-expand-collapse";
 import dagre from "cytoscape-dagre";
 import cola from "cytoscape-cola";
@@ -65,23 +65,18 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
   });
   return elements;
 }
-function createStyleSheet(jsonGraph) {
-  const nodeStylesheet = createNodeStyle(jsonGraph.vertices);
-  nodeStylesheet.style.push(edgeStyle);
-  return nodeStylesheet;
-}
 
 class CytoFunc extends PureComponent {
   constructor(props) {
     super(props);
-    this.cy = null;
     this.compoundsApi = null;
     this.state = {
       //parse data into cyto format
       data: CytoscapeComponent.normalizeElements(
         convertGraphJSONtoCytoFormat(this.props.jsonGraph)
       ),
-      nodeStylesheet: createStyleSheet(this.props.jsonGraph),
+      nodeStylesheet: createNodeStyle(this.props.jsonGraph.vertices),
+      cy: null,
     };
     if (typeof cytoscape("core", "expandCollapse") == "undefined") {
       cytoscape.use(expandCollapse);
@@ -134,16 +129,34 @@ class CytoFunc extends PureComponent {
   }
   initCyto(cytoRef, props) {
     cytoRef.removeAllListeners();
+    cytoRef.elements().removeAllListeners();
     this.compoundsApi = cytoRef.expandCollapse(compoundOptions);
-    cytoRef.on("dbltap", "node", function (e) {
-      cytoRef.elements().not(e.target).unselect();
-      const selectedElement = e.target;
-      //console.log(`doubletap on ${selectedElement}`);
+    cytoRef.on("select", "node", function (e) {
+      cytoRef
+        .elements()
+        .not(e.target)
+        .forEach((elem) => {
+          elem.unselect();
+          elem.unlock();
+        });
 
+      const selectedElement = e.target;
+      selectedElement.select();
+      //console.log(`doubletap on: `);
+      //console.log(selectedElement);
+      selectedElement.outgoers("edge").select();
+      selectedElement.incomers("edge").lock();
+      //console.log(selectedElement.connectedEdges());
       const origID = parseInt(selectedElement[0].data().id.match(/(\d+)/)[0]);
       props.onEntitySelect(origID);
     });
-    this.cy = cytoRef;
+    cytoRef.on("unselect", "node, edge", function (e) {
+      cytoRef.elements().forEach((elem) => {
+        elem.unselect();
+        elem.unlock();
+      });
+    });
+    this.setState({ cy: cytoRef });
   }
 
   render() {
