@@ -78,6 +78,7 @@ class CytoFunc extends PureComponent {
       nodeStylesheet: createNodeStyle(this.props.jsonGraph.vertices),
       cy: null,
     };
+    this.initCyto = this.initCyto.bind(this);
     if (typeof cytoscape("core", "expandCollapse") == "undefined") {
       cytoscape.use(expandCollapse);
     }
@@ -175,6 +176,27 @@ class CytoFunc extends PureComponent {
       });
       props.onEntityDeselect();
     });
+    cytoRef.on(
+      "cxttap",
+      "node:parent",
+      function (e) {
+        console.log(".on call in node:parent selector to collapse");
+        const selectedElement = e.target;
+        this.compoundsApi.collapse(selectedElement);
+        //console.log(selectedElement);
+      }.bind(this)
+    );
+    cytoRef.on(
+      "mouseover",
+      "node.cy-expand-collapse-collapsed-node",
+      function (e) {
+        console.log(
+          ".on call in node.cy-expand-collapse-collapsed-node selector to expand"
+        );
+        const selectedElement = e.target;
+        this.compoundsApi.expand(selectedElement);
+      }.bind(this)
+    );
     this.setState({ cy: cytoRef });
   }
 
