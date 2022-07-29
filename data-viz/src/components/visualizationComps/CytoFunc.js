@@ -36,12 +36,12 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
       classes: node.labels,
       data: {
         id: "node" + node.id,
-        parent: `compond${node.id % 3}`,
+        //parent: `compond${node.id % 3}`,
         label: node.labels,
       },
     });
   });
-  const compounds = [0, 1, 2];
+  const compounds = [];
   compounds.forEach((compound) => {
     elements.push({
       group: "nodes",
@@ -152,7 +152,7 @@ class CytoFunc extends PureComponent {
     cytoRef.removeAllListeners();
     cytoRef.elements().removeAllListeners();
     this.compoundsApi = cytoRef.expandCollapse(compoundOptions);
-    cytoRef.on("select", "node:child", function (e) {
+    cytoRef.on("select", "node", function (e) {
       cytoRef
         .elements()
         .not(e.target)
