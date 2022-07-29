@@ -99,5 +99,26 @@ function createNodeStyle(nodes) {
     style,
   };
 }
+const customLayout = {
+  name: "preset",
+  // positions: function (node) {
+  //   return { x: node.id * 100, y: 100 };
+  // }, // map of (node id) => (position obj); or function(node){ return somPos; }
 
-export { createNodeStyle };
+  zoom: 2, // the zoom level to set (prob want fit = false if set)
+  pan: undefined, // the pan level to set (prob want fit = false if set)
+  fit: true, // whether to fit to viewport
+  padding: 20, // padding on fit
+  animate: false, // whether to transition the node positions
+  animationDuration: 500, // duration of animation in ms if enabled
+  animationEasing: undefined, // easing of animation if enabled
+  animateFilter: function (node, i) {
+    return true;
+  }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+  ready: undefined, // callback on layoutready
+  stop: undefined, // callback on layoutstop
+  transform: function (node, position) {
+    return position;
+  }, // transform a given node position. Useful for changing flow direction in discrete layouts
+};
+export { createNodeStyle, customLayout };

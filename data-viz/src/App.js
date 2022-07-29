@@ -28,7 +28,7 @@ class App extends React.Component {
       visLibs: [
         {
           id: "Cytoscape",
-          layouts: ["dagre", "cola", "grid"],
+          layouts: ["dagre", "cola", "grid", "preset"],
         },
         {
           id: "G6",

@@ -34,6 +34,7 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
     elements.push({
       group: "nodes",
       classes: node.labels,
+      position: { x: node.id * 100, y: node.id * 100 },
       data: {
         id: "node" + node.id,
         //parent: `compond${node.id % 3}`,
@@ -83,20 +84,9 @@ class CytoFunc extends PureComponent {
       cytoscape.use(expandCollapse);
     }
     //define layout
-    switch (this.props.layout) {
-      case "dagre":
-        cytoscape.use(dagre);
-        break;
-      case "cola":
-        cytoscape.use(cola); // register extension
-        break;
-      case "grid":
-        break;
-      default:
-        cytoscape.use(dagre);
-        this.props.layout = "dagre";
-        break;
-    }
+
+    cytoscape.use(dagre);
+    cytoscape.use(cola); // register extension
     this.cytoScene = (
       <CytoscapeComponent
         cy={(cy) => {
@@ -151,6 +141,9 @@ class CytoFunc extends PureComponent {
   initCyto(cytoRef, props) {
     cytoRef.removeAllListeners();
     cytoRef.elements().removeAllListeners();
+    // if (this.props.layout === "preset") {
+    //   cytoRef.layout(customLayout);
+    // }
     this.compoundsApi = cytoRef.expandCollapse(compoundOptions);
     cytoRef.on("select", "node", function (e) {
       cytoRef
