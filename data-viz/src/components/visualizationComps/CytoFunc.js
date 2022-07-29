@@ -10,7 +10,7 @@ const compoundOptions = {
   layoutBy: null, // to rearrange after expand/collapse. It's just layout options or whole layout function. Choose your side!
   // recommended usage: use cose-bilkent layout with randomize: false to preserve mental map upon expand/collapse
   //fisheye: true, // whether to perform fisheye view after expand/collapse you can specify a function too
-  animate: true, // whether to animate on drawing changes you can specify a function too
+  animate: false, // whether to animate on drawing changes you can specify a function too
   animationDuration: 1000, // when animate is true, the duration in milliseconds of the animation
   ready: function () {}, // callback when expand/collapse initialized
   undoable: true, // and if undoRedoExtension exists,
@@ -176,25 +176,35 @@ class CytoFunc extends PureComponent {
       });
       props.onEntityDeselect();
     });
+    // cytoRef.on(
+    //   "cxttap",
+    //   "node:parent",
+    //   function (e) {
+    //     console.log(".on call in node:parent selector to collapse");
+    //     const selectedElement = e.target;
+    //     this.compoundsApi.collapse(selectedElement);
+    //     //console.log(selectedElement);
+    //   }.bind(this)
+    // );
     cytoRef.on(
       "cxttap",
-      "node:parent",
-      function (e) {
-        console.log(".on call in node:parent selector to collapse");
-        const selectedElement = e.target;
-        this.compoundsApi.collapse(selectedElement);
-        //console.log(selectedElement);
-      }.bind(this)
-    );
-    cytoRef.on(
-      "mouseover",
       "node.cy-expand-collapse-collapsed-node",
       function (e) {
         console.log(
           ".on call in node.cy-expand-collapse-collapsed-node selector to expand"
         );
         const selectedElement = e.target;
-        this.compoundsApi.expand(selectedElement);
+        selectedElement
+          .neighborhood("node")
+          .forEach((neighbor) =>
+            this.compoundsApi.expandEdgesBetweenNodes([
+              selectedElement,
+              neighbor,
+            ])
+          );
+        this.compoundsApi.expand(selectedElement, compoundOptions);
+        console.log("selectedElement.children(): ");
+        console.log(selectedElement.children());
       }.bind(this)
     );
     this.setState({ cy: cytoRef });
