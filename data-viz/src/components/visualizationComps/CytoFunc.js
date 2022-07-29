@@ -7,7 +7,7 @@ import cola from "cytoscape-cola";
 import cytoscape from "cytoscape";
 
 const compoundOptions = {
-  layoutBy: null, // to rearrange after expand/collapse. It's just layout options or whole layout function. Choose your side!
+  layoutBy: false, // to rearrange after expand/collapse. It's just layout options or whole layout function. Choose your side!
   // recommended usage: use cose-bilkent layout with randomize: false to preserve mental map upon expand/collapse
   //fisheye: true, // whether to perform fisheye view after expand/collapse you can specify a function too
   animate: false, // whether to animate on drawing changes you can specify a function too
@@ -116,6 +116,8 @@ class CytoFunc extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
+    //knwn bug for stargene layout bahavoir thaht graph expands after expand
+    //https://github.com/iVis-at-Bilkent/cytoscape.js-expand-collapse/issues/67
     if (this.props.clusterNodes !== prevProps.clusterNodes) {
       console.log(
         `useEffect() called with change of clusterNodes which is now: ${this.props.clusterNodes}`
@@ -194,6 +196,8 @@ class CytoFunc extends PureComponent {
           ".on call in node.cy-expand-collapse-collapsed-node selector to expand"
         );
         const selectedElement = e.target;
+        //needs to be done this way beacause of know bugs when combining node and edge expand collapse methods:
+        //https://github.com/iVis-at-Bilkent/cytoscape.js-expand-collapse/issues/100
         selectedElement
           .neighborhood("node")
           .forEach((neighbor) =>
