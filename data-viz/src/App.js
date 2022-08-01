@@ -154,6 +154,7 @@ class App extends React.Component {
         json.graph.vertices.forEach((value) => {
           verticesMap.set(value.id, value);
         });
+        console.log(json);
         this.setState({ loadedGrapEntityJSON: json, verticesMap: verticesMap });
       })
       .then(() => {

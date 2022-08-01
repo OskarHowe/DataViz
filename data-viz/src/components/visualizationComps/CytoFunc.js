@@ -37,12 +37,12 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
       position: { x: node.id * 100, y: node.id * 100 },
       data: {
         id: "node" + node.id,
-        //parent: `compond${node.id % 3}`,
+        parent: `compond${node.id % 3}`,
         label: node.labels,
       },
     });
   });
-  const compounds = [];
+  const compounds = [0, 1, 2];
   compounds.forEach((compound) => {
     elements.push({
       group: "nodes",

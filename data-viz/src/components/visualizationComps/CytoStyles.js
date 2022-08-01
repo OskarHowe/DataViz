@@ -54,7 +54,7 @@ function createNodeStyle(nodes) {
         "background-opacity": 0,
         "border-style": "dashed",
         "border-width": 3,
-        "border-color": color,
+        "border-color": "#ffb039",
         "border-opacity": 0.85,
         //label: "data(label)",
       },
