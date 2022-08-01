@@ -34,7 +34,7 @@ export const LoadGraph = (props) => {
       graph.addNode("node" + node.id, {
         x: Math.random() * 1920 - 960,
         y: Math.random() * 1080 - 540,
-        size: 40,
+        size: 20,
         label: node.labels,
         color: color,
       });
@@ -59,12 +59,11 @@ export const DisplayGraph = (props) => {
       style={{
         height: props.height,
         width: props.width,
-        labelColor: { color: "#000000" },
       }}
       initialSettings={{
         defaultEdgeType: "arrow",
-        labelColor: { color: "#000000" },
-        labelSize: 100,
+        labelColor: { color: "#FFF" },
+        labelSize: 20,
       }}
     >
       <LoadGraph jsonGraph={props.jsonGraph} />
