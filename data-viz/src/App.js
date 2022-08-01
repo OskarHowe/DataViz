@@ -3,6 +3,7 @@ import logo from "./cosmotechDark.png";
 import Modal from "./components/Modal";
 import "./App.css";
 import InfoModal from "./components/statelessComps/InfoModal";
+import { DisplayGraph } from "./components/visualizationComps/SigmaFunc";
 import G6Func from "./components/visualizationComps/G6Func";
 import CytoFunc from "./components/visualizationComps/CytoFunc";
 
@@ -39,6 +40,10 @@ class App extends React.Component {
             "Fruchterman",
             "Grid",
           ],
+        },
+        {
+          id: "Sigma",
+          layouts: ["Default"],
         },
       ],
       loadedGrapEntityJSON: null,
@@ -244,6 +249,15 @@ class App extends React.Component {
                 onEntityDeselect={this.handleGraphEntityDeselect}
               />
             )) ||
+              (this.state.visualizationLib === "Sigma" && (
+                <DisplayGraph
+                  jsonGraph={this.state.loadedGrapEntityJSON.graph}
+                  width={window.innerWidth}
+                  height={window.innerHeight - 90}
+                  onEntitySelect={this.handleGraphEntityClicked}
+                  onEntityDeselect={this.handleGraphEntityDeselect}
+                />
+              )) ||
               (this.state.visualizationLib === "Cytoscape" && (
                 <CytoFunc
                   jsonGraph={this.state.loadedGrapEntityJSON.graph}
@@ -256,7 +270,6 @@ class App extends React.Component {
                   onEntityDeselect={this.handleGraphEntityDeselect}
                 />
               )))}
-
           <InfoModal
             title={
               this.state.selectedNode.label +
@@ -270,7 +283,6 @@ class App extends React.Component {
             attributes={this.state.selectedNode.params}
             toggle={this.toggleInfoModal}
           />
-
           <button
             id="closeBtn"
             className="BlueButton"
@@ -278,21 +290,24 @@ class App extends React.Component {
           >
             +
           </button>
-          <button
-            id="hideEdgesBtn"
-            className="BlueButton"
-            onClick={() => this.toggleEdges()}
-          >
-            Toggle Edges
-          </button>
-
-          <button
-            id="clusterBtn"
-            className="BlueButton"
-            onClick={() => this.toggleClusters()}
-          >
-            Toggle Clusters
-          </button>
+          {this.state.visualizationLib !== "Sigma" && (
+            <div>
+              <button
+                id="hideEdgesBtn"
+                className="BlueButton"
+                onClick={() => this.toggleEdges()}
+              >
+                Toggle Edges
+              </button>
+              <button
+                id="clusterBtn"
+                className="BlueButton"
+                onClick={() => this.toggleClusters()}
+              >
+                Toggle Clusters
+              </button>
+            </div>
+          )}
         </main>
       </div>
     );
