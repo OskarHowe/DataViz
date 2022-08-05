@@ -70,9 +70,9 @@ const createg6Edge = (edge) => ({
 
 const createCombo = (i, color, childrenAmount) => ({
   id: `combo1${i}`,
-  type: "rect",
+  type: "circle",
   //size: Math.sqrt(childrenAmount * Math.pow(40, 2)), //so that the volume of the compound is the added volume of the childnodes
-  size: [childrenAmount * 10, childrenAmount * 40], //so that the volume of the compound is the added volume of the childnodes
+  size: [60], //so that the volume of the compound is the added volume of the childnodes
   label: childrenAmount,
   labelCfg: {
     position: "center",

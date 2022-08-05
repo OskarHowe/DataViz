@@ -56,7 +56,7 @@ function convertGraphJSONtoCytoFormat(grapJsonObj) {
 
   grapJsonObj.edges.forEach((edge) => {
     elements.push({
-      groupe: "edges",
+      group: "edges",
       data: {
         id: "edge" + edge.id,
         source: "node" + edge.sourceNode, // Integer

@@ -15,6 +15,7 @@ import SigmaEventHandler from "./SigmaEventHandler";
 import { LayoutForceAtlas2Control } from "@react-sigma/layout-forceatlas2";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import "./SigmaFunc.css";
+
 export const LoadGraph = (props) => {
   const loadGraph = useLoadGraph();
 
@@ -25,6 +26,7 @@ export const LoadGraph = (props) => {
       type: "directed",
     });
     const colorMap = new Map();
+    const amountNodes = props.jsonGraph.vertices.length || 0;
     props.jsonGraph.vertices.forEach((node) => {
       let color = getAttributeCombinationOnTheFly(
         graphicsColors,
@@ -32,9 +34,9 @@ export const LoadGraph = (props) => {
         colorMap
       );
       graph.addNode("node" + node.id, {
-        x: Math.random() * 1920 - 960,
-        y: Math.random() * 1080 - 540,
-        size: 20,
+        y: Math.random() * props.height - props.height / 2,
+        x: Math.random() * props.width - props.width / 2,
+        size: Math.max((1 / amountNodes) * 400, 5),
         label: node.labels,
         color: color,
       });
@@ -44,7 +46,7 @@ export const LoadGraph = (props) => {
         "edge" + edge.id,
         "node" + edge.sourceNode,
         "node" + edge.destinationNode,
-        { size: 5 }
+        { size: Math.max((1 / amountNodes) * 100, 2) }
       );
     });
     loadGraph(graph);
@@ -66,7 +68,11 @@ export const DisplayGraph = (props) => {
         labelSize: 20,
       }}
     >
-      <LoadGraph jsonGraph={props.jsonGraph} />
+      <LoadGraph
+        jsonGraph={props.jsonGraph}
+        height={props.height}
+        width={props.width}
+      />
       <SigmaEventHandler
         onEntitySelect={props.onEntitySelect}
         onEntityDeselect={props.onEntityDeselect}
@@ -74,7 +80,6 @@ export const DisplayGraph = (props) => {
       <ControlsContainer position={"bottom-right"}>
         <ZoomControl />
         <FullScreenControl />
-
         <LayoutForceAtlas2Control />
       </ControlsContainer>
     </SigmaContainer>
