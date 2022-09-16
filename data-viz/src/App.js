@@ -119,7 +119,7 @@ class App extends React.Component {
    * select node
    */
   fetchGraphIDs() {
-    fetch("http://localhost:25566/graphs") //because fetch returns a promise
+    fetch("http://localhost:25566/graph") //because fetch returns a promise
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
